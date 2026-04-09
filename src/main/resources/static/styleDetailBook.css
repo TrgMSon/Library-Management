@@ -1,0 +1,44 @@
+.main-view-detail-book {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+    height: 80%;
+    padding-top: 25px;
+}
+
+.view-img {
+    height: 500px;
+    width: 300px;
+    margin-left: 90px;
+}
+
+.content-book {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-left: 200px;
+    overflow: visible;
+    font-size: 22px;
+}
+
+.content-book p {
+    white-space: pre-line;
+}
+
+#line {
+    width: 100%;
+    border: 1px solid black;
+}
+
+#goBackBtn {
+    width: 15%;
+    align-self: center;
+    margin-bottom: 20px;
+}
+
+#descElement {
+    padding-top: 20px;
+    height: 400px;
+    overflow: auto;
+    overflow-y: scroll;
+}

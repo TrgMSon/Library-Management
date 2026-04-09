@@ -1,26 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Quản lý thư viện</title>
-        <link rel="stylesheet" th:href="@{/styleHome.css}">
-    </head>
-    <body>
-        <div class="main">
-            <div class="top-taskbar">
-                <button id="goHomeBtn">Thư viện sách</button>
+
+<head>
+    <title>Book Store</title>
+    <link rel="stylesheet" th:href="@{/styleHome.css}">
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-taskbar">
+            <button id="goHomeBtn">Book Store</button>
+            <form id="searchForm">
                 <input type="text" placeholder="Tìm kiếm" id="searchInput">
-                <button id="logoutBtn">Đăng xuất</button>
+            </form>
+            <p th:text="${userName}"></p>
+        </div>
+
+        <div class="main-view">
+            <div class="sidebar">
+                <div class="optionDiv">
+                    <p id="literatureBook">Văn học Việt Nam</p>
+                    <p id="itBook">Sách công nghệ thông tin</p>
+                    <p id="scienceBook">Sách khoa học</p>
+                    <p id="comicBook">Truyện tranh</p>
+                    <p id="novel">Tiểu thuyết</p>
+                </div>
+
+                <p id="logoutBtn">Đăng xuất</p>
             </div>
 
-            <div class="main-view">
-                <div class="sidebar">
-                    <p>Danh sách đầu sách</p>
-                    <p>Quản lý phiếu mượn</p>
-                    <p>Thống kê</p>
-                </div>
-                <div class="main-view2">
+            <div class="main-view2">
+                <div class="viewBook" th:each="book : ${books}">
+                    <img th:src="${book.urlImg}">
+                    <p th:text="${book.name}"></p>
+                    <button class="viewDetailBtn" th:data-book-id="${book.bookId}">Xem chi tiết</button>
                 </div>
             </div>
         </div>
-    </body>
+
+    </div>
+
+    <script th:src="@{/scriptHome.js}"></script>
+    <script th:src="@{/scriptModul.js}"></script>
+</body>
+
 </html>

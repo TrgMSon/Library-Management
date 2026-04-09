@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Book Store</title>
+    <link rel="stylesheet" th:href="@{/styleHome.css}">
+    <link rel="stylesheet" th:href="@{/styleDetailBook.css}">
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-taskbar">
+            <button id="goHomeBtn">Book Store</button>
+        </div>
+
+        <div class="main-view-detail-book">
+            <img th:src="${book.urlImg}" class="view-img">
+            <div class="content-book">
+                <h2 th:text="${book.name}"></h2>
+                Tác giả: <p th:text="${book.author}"></p>
+                <label id="line"></label>
+                <p id="descElement" th:text="${book.description}"></p>
+            </div>
+        </div>
+
+        <button id="goBackBtn">Quay lại trang chủ</button>
+    </div>
+</body>
+<script th:src="@{/scriptDetail.js}"></script>
+
+</html>

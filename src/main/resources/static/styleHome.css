@@ -1,77 +1,221 @@
-body {
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif; 
+}
+
+body {
+    background-color: #ffffff;
+    color: #0F1111;
 }
 
 .main {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
 }
 
+
 .top-taskbar {
+    position: relative;
+    background-color: #131921; 
+    color: white;
     display: flex;
-    width: 100%;
-    border-bottom: 1px solid black;
-    padding-bottom: 10px;
-    padding-top: 20px;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 20px;
+}
+
+.top-taskbar button {
+    background: transparent;
+    border: 1px solid transparent;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 2px;
+}
+
+.top-taskbar button:hover {
+    border: 1px solid white; 
 }
 
 .top-taskbar p {
-    width: 100px;
-    margin: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+#goHomeBtn {
+    font-size: 1.2rem;
+}
+
+#searchForm {
+    flex-grow: 1; 
+    display: flex;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+}
+
+#searchInput:focus {
+    box-shadow: 0 0 0 2px #f90, 0 0 0 3px transparent; 
 }
 
 .main-view {
     display: flex;
-    height: 80%;
-    flex: 1;
-    margin-top: 40px;
-}
-
-#searchInput {
-    margin-left: 50%;
-}
-
-#logoutBtn {
-    margin-left: 5%;
-    border: none;
-    background-color: white;
-    cursor: pointer;
-}
-
-#goHomeBtn {
-    font-size: 30px;
-    width: auto;
-    border: none;
-    background-color: white;
-    cursor: pointer;
-    padding-left: 10px;
+    padding: 20px;
+    gap: 30px;
 }
 
 .sidebar {
-    width: 300px;
-    border: 1px solid black;
-    height: 40%;
-    margin-right: 10px;
-    margin-left: 10px;
-    border-radius: 4px;
-    padding: 20px;
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid #ddd;
+    padding-right: 15px;
 }
 
-.sidebar p {
-    padding: 20px;
-    border-bottom: 1px solid black;
+.sidebar .optionDiv p {
+    padding: 8px 0;
+    color: #111;
+    font-size: 0.95rem;
     cursor: pointer;
 }
 
-.sidebar p:hover {
-    background-color: #A9A9A9;
+.sidebar .optionDiv p:hover {
+    color: #c45500; 
+    text-decoration: underline;
+}
+
+#logoutBtn {
+    margin-top: 30px;
+    padding: 10px 0;
+    color: #007185; 
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#logoutBtn:hover {
+    color: #c45500;
+    text-decoration: underline;
 }
 
 .main-view2 {
-    flex: 1;
-    height: 100%;
-    border: 1px solid black;
-    border-radius: 4px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    width: 100%;
+}
+
+.viewBook {
+    background: #fff;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.viewBook img {
+    width: 100%;
+    height: 300px; 
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.viewBook p {
+    font-size: 1rem;
+    color: #0F1111;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+}
+
+.viewBook button {
+    padding: 8px;
+    border-radius: 100px; 
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-top: auto;
+}
+
+.addToCart {
+    background-color: #FFD814; 
+    color: #0F1111;
+}
+
+.addToCart:hover {
+    background-color: #F7CA00;
+}
+
+.viewDetailBtn {
+    background-color: #FFA41C; 
+    color: #0F1111;
+    margin-top: 5px;
+}
+
+.viewDetailBtn:hover {
+    background-color: #FA8900;
+}
+
+.viewCart {
+    position: absolute;
+    left: 720px;
+    top: 200px;
     padding: 20px;
+    border: 2px solid black;
+    min-width: 400px;
+    min-height: 400px;
+    width: fit-content;
+    height: fit-content;
+    background-color: #f3f3f3;
+}
+
+.viewCart h2 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+#itemsInCart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#btnDiv {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+#btnDiv button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#payBtn {
+    background-color: #FFD814;
+}
+
+#updateCart {
+    background-color: #e3e6e6;
+    border: 1px solid #d5d9d9;
+}
+
+.hide {
+    display: none;
 }

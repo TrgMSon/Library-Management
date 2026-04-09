@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Quản lý Library Manage</title>
+    <link rel="stylesheet" th:href="@{/styleManage.css}">
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-taskbar">
+            <button id="goHomeBtn">Quản lý Library Manage</button>
+            <form id="searchFormManage">
+                <input type="text" placeholder="Tìm kiếm" id="searchInputManage">
+                <button type="submit" hidden></button>
+            </form>
+            <p th:text="${userName}"></p>
+        </div>
+
+        <div class="main-view">
+            <div class="sidebar">
+                <div class="optionDiv">
+                    <p id="manageBookBtn">Quản lý đầu sách</p>
+                    <p id="manageInvoiceBtn">Quản lý nhân viên</p>
+                </div>
+
+                <p id="logoutBtn">Đăng xuất</p>
+            </div>
+
+            <div class="main-view2">
+                <div class="optionBtn">
+                    <button id="addBtn" class="btn">Thêm</button>
+                </div>
+
+                <ul class="listItem"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{scriptManage.js}"></script>
+    <!-- <script th:src="@{scriptModulManage.js}"></script> -->
+</body>
+
+</html>
