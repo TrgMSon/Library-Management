@@ -83,6 +83,7 @@ public class MainController {
 
         User user = userService.findUserById(Integer.parseInt(userId));
         model.addAttribute("userName", user.getName());
+        model.addAttribute("userId", user.getUserId());
 
         return "home";
     }

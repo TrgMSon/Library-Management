@@ -35,4 +35,14 @@ public class BookController {
     public ArrayList<Book> getPagingBook() {
         return bookService.getAllBook();
     }
+
+    @GetMapping("/searchBookType")
+    public ArrayList<Book> searchBookType(@RequestParam String type, @RequestParam String name) {
+        return bookService.searchBookType(type, name);
+    }
+
+    @GetMapping("/searchBook")
+    public ArrayList<Book> searchBook(@RequestParam String name) {
+        return bookService.searchBook(name);
+    }
 }

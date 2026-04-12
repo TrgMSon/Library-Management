@@ -42,3 +42,15 @@
     overflow: auto;
     overflow-y: scroll;
 }
+
+#quantityDiv {
+    display: flex;
+    font-size: 28px;
+    margin-top: 70px;
+    align-items: center;
+}
+
+#quantity {
+    margin-left: 10px;
+    margin-right: 10px;
+}

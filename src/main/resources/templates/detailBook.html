@@ -15,11 +15,16 @@
 
         <div class="main-view-detail-book">
             <img th:src="${book.urlImg}" class="view-img">
+
             <div class="content-book">
                 <h2 th:text="${book.name}"></h2>
                 Tác giả: <p th:text="${book.author}"></p>
                 <label id="line"></label>
                 <p id="descElement" th:text="${book.description}"></p>
+                <div id="quantityDiv">
+                <label for="quantity">Số lượng có sẵn:</label>
+                <p th:text="${book.quantity}" id="quantity"></p>
+            </div>
             </div>
         </div>
 

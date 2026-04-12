@@ -6,8 +6,16 @@ const scienceBooks = document.getElementById("scienceBook");
 const literatureBooks = document.getElementById("literatureBook");
 const viewDetailBtns = document.querySelectorAll(".viewDetailBtn");
 const logoutBtn = document.getElementById("logoutBtn");
+const manageBorrowCardBtn = document.getElementById("manageBorrowCard");
+const searchInput = document.getElementById("searchInput");
+const cardDiv = document.querySelector(".cardDiv");
+const createCardDiv = document.querySelector(".createCardDiv");
+
+cardDiv.style.display = "none";
+createCardDiv.style.display = "none";
 
 let bookType = "IT";
+let viewingBook = true;
 
 itBooks.style.backgroundColor = "#A9A9A9";
 comicBooks.style.backgroundColor = "";
@@ -25,11 +33,6 @@ function addBookToUI(book) {
     let name = document.createElement("p");
     name.innerText = book.name;
 
-    let addBtn = document.createElement("button");
-    addBtn.classList.add("addToCart")
-    addBtn.innerText = "Thêm vào giỏ hàng";
-    addBtn.dataset.bookId = book.bookId;
-
     let viewDetailBtn = document.createElement("button");
     viewDetailBtn.classList.add("viewDetailBtn");
     viewDetailBtn.innerText = "Xem chi tiết";
@@ -37,7 +40,6 @@ function addBookToUI(book) {
 
     viewBook.appendChild(img);
     viewBook.appendChild(name);
-    viewBook.appendChild(addBtn);
     viewBook.appendChild(viewDetailBtn);
 
     mainView.appendChild(viewBook);
@@ -51,8 +53,16 @@ itBooks.addEventListener("click", async function () {
     comicBooks.style.backgroundColor = "";
     scienceBooks.style.backgroundColor = "";
     literatureBooks.style.backgroundColor = "";
+    manageBorrowCardBtn.style.backgroundColor = "";
+
+    viewingBook = true;
+    searchInput.style.display = "block";
+    cardDiv.style.display = "none";
+    createCardDiv.style.display = "none";
 
     mainView.innerHTML = "";
+    mainView.style.display = "grid";
+    mainView.style.flexDirection = "";
 
     let response = await fetch("/api/book/getBookType?type=IT");
     let books = await response.json();
@@ -69,8 +79,16 @@ novels.addEventListener("click", async function () {
     comicBooks.style.backgroundColor = "";
     scienceBooks.style.backgroundColor = "";
     literatureBooks.style.backgroundColor = "";
+    manageBorrowCardBtn.style.backgroundColor = "";
+
+    viewingBook = true;
+    searchInput.style.display = "block";
+    cardDiv.style.display = "none";
+    createCardDiv.style.display = "none";
 
     mainView.innerHTML = "";
+    mainView.style.display = "grid";
+    mainView.style.flexDirection = "";
 
     let response = await fetch("/api/book/getBookType?type=Novel");
     let books = await response.json();
@@ -87,8 +105,16 @@ comicBooks.addEventListener("click", async function () {
     comicBooks.style.backgroundColor = "#A9A9A9";
     scienceBooks.style.backgroundColor = "";
     literatureBooks.style.backgroundColor = "";
+    manageBorrowCardBtn.style.backgroundColor = "";
+
+    viewingBook = true;
+    searchInput.style.display = "block";
+    cardDiv.style.display = "none";
+    createCardDiv.style.display = "none";
 
     mainView.innerHTML = "";
+    mainView.style.display = "grid";
+    mainView.style.flexDirection = "";
 
     let response = await fetch("/api/book/getBookType?type=comic");
     let books = await response.json();
@@ -105,8 +131,16 @@ scienceBooks.addEventListener("click", async function () {
     comicBooks.style.backgroundColor = "";
     scienceBooks.style.backgroundColor = "#A9A9A9";
     literatureBooks.style.backgroundColor = "";
+    manageBorrowCardBtn.style.backgroundColor = "";
+
+    viewingBook = true;
+    searchInput.style.display = "block";
+    cardDiv.style.display = "none";
+    createCardDiv.style.display = "none";
 
     mainView.innerHTML = "";
+    mainView.style.display = "grid";
+    mainView.style.flexDirection = "";
 
     let response = await fetch("/api/book/getBookType?type=Science");
     let books = await response.json();
@@ -123,8 +157,16 @@ literatureBooks.addEventListener("click", async function () {
     comicBooks.style.backgroundColor = "";
     scienceBooks.style.backgroundColor = "";
     literatureBooks.style.backgroundColor = "#A9A9A9";
+    manageBorrowCardBtn.style.backgroundColor = "";
+
+    viewingBook = true;
+    searchInput.style.display = "block";
+    cardDiv.style.display = "none";
+    createCardDiv.style.display = "none";
 
     mainView.innerHTML = "";
+    mainView.style.display = "grid";
+    mainView.style.flexDirection = "";
 
     let response = await fetch("/api/book/getBookType?type=literature");
     let books = await response.json();

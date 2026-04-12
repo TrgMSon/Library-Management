@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif; 
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -19,7 +19,7 @@ body {
 
 .top-taskbar {
     position: relative;
-    background-color: #131921; 
+    background-color: #131921;
     color: white;
     display: flex;
     align-items: center;
@@ -38,7 +38,7 @@ body {
 }
 
 .top-taskbar button:hover {
-    border: 1px solid white; 
+    border: 1px solid white;
 }
 
 .top-taskbar p {
@@ -51,7 +51,7 @@ body {
 }
 
 #searchForm {
-    flex-grow: 1; 
+    flex-grow: 1;
     display: flex;
 }
 
@@ -65,7 +65,7 @@ body {
 }
 
 #searchInput:focus {
-    box-shadow: 0 0 0 2px #f90, 0 0 0 3px transparent; 
+    box-shadow: 0 0 0 2px #f90, 0 0 0 3px transparent;
 }
 
 .main-view {
@@ -75,10 +75,15 @@ body {
 }
 
 .sidebar {
+    height: 700px;
     width: 220px;
     flex-shrink: 0;
     border-right: 1px solid #ddd;
     padding-right: 15px;
+}
+
+.optionDiv {
+    margin-bottom: 20px;
 }
 
 .sidebar .optionDiv p {
@@ -89,14 +94,13 @@ body {
 }
 
 .sidebar .optionDiv p:hover {
-    color: #c45500; 
+    color: #c45500;
     text-decoration: underline;
 }
 
 #logoutBtn {
-    margin-top: 30px;
     padding: 10px 0;
-    color: #007185; 
+    color: #007185;
     font-weight: bold;
     cursor: pointer;
 }
@@ -123,7 +127,7 @@ body {
 
 .viewBook img {
     width: 100%;
-    height: 300px; 
+    height: 300px;
     object-fit: contain;
     margin-bottom: 10px;
 }
@@ -135,62 +139,28 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2; 
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
 .viewBook button {
     padding: 8px;
-    border-radius: 100px; 
+    border-radius: 100px;
     border: 1px solid transparent;
     cursor: pointer;
     font-size: 0.9rem;
     width: 100%;
-    margin-top: auto;
-}
-
-.addToCart {
-    background-color: #FFD814; 
-    color: #0F1111;
-}
-
-.addToCart:hover {
-    background-color: #F7CA00;
+    margin-top: 0;
 }
 
 .viewDetailBtn {
-    background-color: #FFA41C; 
+    background-color: #FFA41C;
     color: #0F1111;
     margin-top: 5px;
 }
 
 .viewDetailBtn:hover {
     background-color: #FA8900;
-}
-
-.viewCart {
-    position: absolute;
-    left: 720px;
-    top: 200px;
-    padding: 20px;
-    border: 2px solid black;
-    min-width: 400px;
-    min-height: 400px;
-    width: fit-content;
-    height: fit-content;
-    background-color: #f3f3f3;
-}
-
-.viewCart h2 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-}
-
-#itemsInCart {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
 }
 
 #btnDiv {
@@ -211,11 +181,55 @@ body {
     background-color: #FFD814;
 }
 
-#updateCart {
-    background-color: #e3e6e6;
-    border: 1px solid #d5d9d9;
-}
-
 .hide {
     display: none;
+}
+
+.createCardBtn {
+    padding: 8px;
+    border-radius: 100px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 30px;
+    width: fit-content;
+    height: fit-content;
+    background-color: #1E90FF;
+    color: white;
+}
+
+.row, .header {
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid black;
+}
+
+.row:hover {
+    background-color: #A9A9A9;
+    cursor: pointer;
+}
+
+.listCard {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: 20px;
+}
+
+.searchFormCard {
+    display: flex;
+}
+
+.searchOption {
+    display: flex;
+    margin-right: 100px;
+    margin-bottom: 20px;
+}
+
+label {
+    padding-left: 5px;
+    padding-right: 25px;
+}
+
+.searchInputCard {
+    font-size: 18px;
 }

@@ -2,18 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Book Store</title>
+    <title>Library Manage</title>
     <link rel="stylesheet" th:href="@{/styleHome.css}">
+    <link rel="stylesheet" th:href="@{/styleModul.css}">
 </head>
 
 <body>
     <div class="main">
         <div class="top-taskbar">
-            <button id="goHomeBtn">Book Store</button>
+            <button id="goHomeBtn">Library Manage</button>
             <form id="searchForm">
-                <input type="text" placeholder="Tìm kiếm" id="searchInput">
+                <input type="text" placeholder="Tìm kiếm đầu sách..." id="searchInput">
+                <button type="submit" hidden></button>
             </form>
-            <p th:text="${userName}"></p>
+            <p th:text="${userName}" th:data-user-id="${userId}" id="userLabel"></p>
         </div>
 
         <div class="main-view">
@@ -26,6 +28,11 @@
                     <p id="novel">Tiểu thuyết</p>
                 </div>
 
+                <div class="optionDiv">
+                    <p id="manageBorrowCard">Quản lý phiếu mượn</p>
+                    <p id="manageReader">Quản lý độc giả</p>
+                </div>
+
                 <p id="logoutBtn">Đăng xuất</p>
             </div>
 
@@ -36,6 +43,91 @@
                     <button class="viewDetailBtn" th:data-book-id="${book.bookId}">Xem chi tiết</button>
                 </div>
             </div>
+
+            <div class="cardDiv">
+                <p>Thông tin phiếu mượn</p>
+                <div class="cardInfor">
+                    <div class="userInfor">
+                        <p id="cardIdElement"></p>
+                        <p id="userElement"></p>
+                        <p id="readerElement"></p>
+                    </div>
+
+                    <div class="timeInfor">
+                        <p id="createdElement"></p>
+                    </div>
+                </div>
+
+                <div class="booksDiv">
+                    <p>Danh sách sách mượn:</p>
+                    <table class="listBorrowBook">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>Ngày hẹn trả</th>
+                            <th>Ngày trả</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="noteDiv">
+                    <label for="totalAmountInput">Tiền phạt:</label>
+                    <input type="text" id="totalAmountInput">
+                    <label for="noteContent">Ghi chú:</label>
+                    <textarea id="noteContent"></textarea>
+                </div>
+
+                <div class="btn">
+                    <p id="goBack">Quay lại</p>
+                    <p id="acpt">Xác nhận</p>
+                </div>
+            </div>
+
+            <div class="createCardDiv">
+                <h3>Tạo phiếu mượn mới:</h3>
+
+                <div class="readerInput">
+                    <label for="readerIdInput">Mã độc giả:</label>
+                    <input id="readerIdInput" type="text">
+                </div>
+
+                <div class="booksDiv">
+                    <label for="searchBookForm">Tìm thông tin đầu sách:</label>
+                    <form id="searchBookForm">
+                        <input type="text" id="searchBookInput" placeholder="Tìm kiếm theo tên sách...">
+                        <button type="submit" hidden></button>
+                    </form>
+
+                    <table class="bookSearch">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>Số lượng có sẵn</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="booksDiv">
+                    <label for="addBorowBook">Danh sách sách mượn:</label>
+                    <button type="button" id="addBorowBook">Thêm</button>
+
+                    <table class="bookInCreateCard">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>Ngày hẹn trả</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="btn">
+                    <p id="cancelCreateCard">Quay lại</p>
+                    <p id="acptCreateCard">Xác nhận</p>
+                </div>
+            </div>
+
         </div>
 
     </div>

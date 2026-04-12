@@ -1,0 +1,111 @@
+.cardDiv, .createCardDiv {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.cardInfor {
+    width: 60%;
+    display: flex;
+    border: 1px solid black;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.userInfor, .timeInfor {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.booksDiv {
+    margin-top: 50px;
+    width: 100%;
+    height: fit-content;
+}
+
+.listBorrowBook {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+th, td {
+    text-align: left;
+    border: 1px solid black;
+    padding-left: 5px;
+}
+
+.btn {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn p:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.noteDiv {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.noteDiv textarea {
+    height: 100px;
+    width: 60%;
+    resize: none;
+}
+
+.rowBookSearch:hover {
+    background-color: #A9A9A9;
+}
+
+.rowBook:hover {
+    background-color: #A9A9A9;
+}
+
+#totalAmountInput {
+    width: 60%;
+}
+
+.actionReturn:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.readerInput {
+    display: flex;
+    width: 30%;
+    padding: 10px;
+}
+
+.bookSearch {
+    height: 100%;
+    width: 20%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin-top: 5px;
+}
+
+.bookSearch td {
+    min-width: 100px;
+}
+
+.bookInCreateCard {
+    height: 100%;
+    width: 25%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin-top: 5px;
+}
+
+.bookInCreateCard td {
+    min-width: 100px;
+}

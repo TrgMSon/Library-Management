@@ -26,4 +26,12 @@ public class BookService {
     public ArrayList<Book> getAllBook() {
         return bookRepo.findAllBook();
     }
+
+    public ArrayList<Book> searchBookType(String type, String name) {
+        return bookRepo.findBookByNameAndType(type, "%" + name + "%");
+    }
+
+    public ArrayList<Book> searchBook(String name) {
+        return bookRepo.findBookByName("%" + name + "%");
+    }
 }
