@@ -7,6 +7,8 @@ import com.example.demo.dto.CreateCardDTO;
 import com.example.demo.dto.CreateCardDetailInput;
 import com.example.demo.service.ReaderService;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,8 +39,8 @@ public class ReaderController {
     }
     
     @PostMapping("/addDetailCard")
-    public void addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
-        readerService.addDetailCard(cardDetailInput.getCardDetails());
+    public ArrayList<String> addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
+        return readerService.addDetailCard(cardDetailInput.getCardDetails());
     }
     
 }

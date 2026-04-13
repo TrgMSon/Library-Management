@@ -192,11 +192,5 @@ mainView.addEventListener("click", async function (e) {
 
 logoutBtn.addEventListener("click", async function (e) {
     e.preventDefault();
-
-    await fetch("/api/deleteCart", {
-        method: "POST"
-    });
-    cartId = null;
-
     window.location.href = "/logout";
 });

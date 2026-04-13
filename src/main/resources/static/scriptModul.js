@@ -19,6 +19,12 @@ const searchBookForm = document.getElementById("searchBookForm");
 const searchBookInput = document.getElementById("searchBookInput");
 const readerIdInput = document.getElementById("readerIdInput");
 
+function formateDate(date) {
+    let tmp = date.split("T");
+    let tmp2 = tmp[0].split("-");
+    return `${tmp2[2]}/${tmp2[1]}/${tmp2[0]} ${tmp[1]}`;
+}
+
 function initListCard() {
     listCard.classList.add("listCard");
 
@@ -87,7 +93,7 @@ function addCardToUI(card) {
     user.innerText = card.userName;
 
     let createdAt = document.createElement("td");
-    createdAt.innerText = card.createdAt;
+    createdAt.innerText = formateDate(card.createdAt);
 
     row.appendChild(cardId);
     row.appendChild(reader);
@@ -171,7 +177,7 @@ function addBorrowBook(book) {
     bookNameElement.innerText = book.bookName;
 
     let expireElement = document.createElement("td");
-    expireElement.innerText = book.expire;
+    expireElement.innerText = formateDate(book.expire);
 
     let returnDateElement = document.createElement("td");
     returnDateElement.innerText = book.returnDate;
@@ -230,7 +236,9 @@ function addRow() {
     bookNameElement.contentEditable = true;
 
     let expireElement = document.createElement("td");
-    expireElement.contentEditable = true;
+    let expireInput = document.createElement("input");
+    expireInput.type = "date";
+    expireElement.appendChild(expireInput);
 
     row.appendChild(bookIdElement);
     row.appendChild(bookNameElement);
@@ -282,6 +290,13 @@ searchBookForm.addEventListener("submit", async function (e) {
     for (let i = 0; i < books.length; i++) addBookSearch(books[i]);
 });
 
+function markItem(bookIds) {
+    let rowBooks = document.querySelectorAll(".rowBook");
+    rowBooks.forEach(book => {
+        if (bookIds.includes((book.cells)[0].innerText)) book.style.backgroundColor = "#A9A9A9";
+    });
+}
+
 acptCreateCard.addEventListener("click", async function () {
     let readerId = readerIdInput.value.trim();
     if (readerId === "") {
@@ -289,7 +304,20 @@ acptCreateCard.addEventListener("click", async function () {
         return;
     }
 
+    let isError = false;
     let rowBooks = document.querySelectorAll(".rowBook");
+    rowBooks.forEach(book => {
+        if ((book.cells)[0].innerText.trim() === "" || (book.cells)[1].innerText.trim() === "" || (book.cells)[2].querySelector("input").value === "") {
+            alert("Vui lòng nhập đủ thông tin sách mượn");
+            isError = true;
+            return;
+        }
+        
+        if ((book.cells)[0].innerText.trim() === "" && (book.cells)[1].innerText.trim() === "" && (book.cells)[2].querySelector("input").value === "") book.remove();
+    });
+    if (isError) return;
+
+    rowBooks = document.querySelectorAll(".rowBook");
     if (rowBooks.length === 0) {
         alert("Vui lòng chọn sách mượn");
         return;
@@ -326,11 +354,11 @@ acptCreateCard.addEventListener("click", async function () {
         borrowBooks.push({
             borrowCardId: borrowCardId,
             bookId: (rowBooks[i].cells)[0].innerText,
-            expire: (rowBooks[i].cells)[2].innerText
+            expire: (rowBooks[i].cells)[2].querySelector("input").value
         });
     }
 
-    await fetch("/api/reader/addDetailCard", {
+    response = await fetch("/api/reader/addDetailCard", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -338,7 +366,13 @@ acptCreateCard.addEventListener("click", async function () {
         body: JSON.stringify({
             cardDetails: borrowBooks
         })
-    });
+    }).then(res => res.json());
+
+    if (response.length > 0) {
+        markItem(response);
+        alert("Số lượng đầu sách trong kho không đủ");
+        return;
+    }
 
     resetCreateCard();
 

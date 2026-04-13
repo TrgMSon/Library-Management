@@ -32,11 +32,17 @@ public class ReaderService {
         return readerRepo.getCardCreatedId(card.getReaderId());
     }
 
-    public void addDetailCard(ArrayList<CreateDetailCardDTO> cardDetails) {
+    public ArrayList<String> addDetailCard(ArrayList<CreateDetailCardDTO> cardDetails) {
+        ArrayList<String> bookIds = new ArrayList<>();
+
         for (CreateDetailCardDTO cardDetail : cardDetails) {
             String expire = cardDetail.getExpire() + "T22:00:00";
             LocalDateTime expireDate = LocalDateTime.parse(expire);
-            readerRepo.addDetailCard(cardDetail.getBorrowCardId(), cardDetail.getBookId(), expireDate, "borrowing");
+            if (readerRepo.decreaseQtyBook(1, cardDetail.getBookId()) > 0) {
+                readerRepo.addDetailCard(cardDetail.getBorrowCardId(), cardDetail.getBookId(), expireDate, "borrowing");
+            }
+            else bookIds.add(cardDetail.getBookId() + "");
         }
+        return bookIds;
     }
 }
