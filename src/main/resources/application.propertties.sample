@@ -1,0 +1,29 @@
+spring.application.name=demo
+
+# ===============================
+# DATABASE
+# ===============================
+
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+
+#Cloud
+#spring.datasource.url=jdbc:mysql://gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/test
+#spring.datasource.username=3KKrpbBq5WXSWTz.root
+#spring.datasource.password=3G95BBRElPhquOdm
+
+
+#Local
+spring.datasource.url=jdbc:mysql://localhost:3306/library_system
+spring.datasource.username=root
+spring.datasource.password=2005
+
+# ===============================
+# JPA / HIBERNATE
+# ===============================
+
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+# Session
+server.servlet.session.timeout = 20m
