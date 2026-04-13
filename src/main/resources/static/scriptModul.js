@@ -18,7 +18,6 @@ const bookSearch = document.querySelector(".bookSearch");
 const searchBookForm = document.getElementById("searchBookForm");
 const searchBookInput = document.getElementById("searchBookInput");
 const readerIdInput = document.getElementById("readerIdInput");
-const userLabel = document.getElementById("userLabel");
 
 function initListCard() {
     listCard.classList.add("listCard");

@@ -15,7 +15,7 @@
                 <input type="text" placeholder="Tìm kiếm đầu sách..." id="searchInput">
                 <button type="submit" hidden></button>
             </form>
-            <p th:text="${userName}" th:data-user-id="${userId}" id="userLabel"></p>
+            <p th:text="${userName}" th:data-user-id="${userId}" th:data-role="${role}" id="userLabel"></p>
         </div>
 
         <div class="main-view">
@@ -31,6 +31,8 @@
                 <div class="optionDiv">
                     <p id="manageBorrowCard">Quản lý phiếu mượn</p>
                     <p id="manageReader">Quản lý độc giả</p>
+                    <p id="manageEmployee">Quản lý nhân viên</p>
+                    <p id="overView">Thống kê</p>
                 </div>
 
                 <p id="logoutBtn">Đăng xuất</p>

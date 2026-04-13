@@ -10,6 +10,14 @@ const manageBorrowCardBtn = document.getElementById("manageBorrowCard");
 const searchInput = document.getElementById("searchInput");
 const cardDiv = document.querySelector(".cardDiv");
 const createCardDiv = document.querySelector(".createCardDiv");
+const userLabel = document.getElementById("userLabel");
+const manageEmployee = document.getElementById("manageEmployee");
+const overView = document.getElementById("overView");
+
+if (userLabel.dataset.role === "user") {
+    manageEmployee.style.display = "none";
+    overView.style.display = "none";
+}
 
 cardDiv.style.display = "none";
 createCardDiv.style.display = "none";

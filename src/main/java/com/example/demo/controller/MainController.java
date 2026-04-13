@@ -42,8 +42,7 @@ public class MainController {
 
         if (result != null) {
             session.setAttribute("userId", result.getUserId() + "");
-            if (result.getRole().equals("user")) return "redirect:/home";
-            else return "redirect:/manage";
+            return "redirect:/home";
         }
         else {
             ra.addFlashAttribute("error", "Email hoặc mật khẩu không đúng, vui lòng thử lại.");
@@ -84,6 +83,7 @@ public class MainController {
         User user = userService.findUserById(Integer.parseInt(userId));
         model.addAttribute("userName", user.getName());
         model.addAttribute("userId", user.getUserId());
+        model.addAttribute("role", user.getRole());
 
         return "home";
     }
@@ -99,19 +99,5 @@ public class MainController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
-    }
-
-    @GetMapping("/manage")
-    public String manage(HttpSession session, Model model) {
-        String userId = (String) session.getAttribute("userId");
-
-        if (userId == null) {
-            return "redirect:/login";
-        }
-
-        User user = userService.findUserById(Integer.parseInt(userId));
-        model.addAttribute("userName", user.getName());
-
-        return "manage";
     }
 }
