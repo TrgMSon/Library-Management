@@ -32,7 +32,9 @@ function initListCard() {
     titleRow.classList.add("header");
 
     let th1 = document.createElement("th");
-    th1.innerText = "ID";
+    th1.innerText = "ID phiếu";
+    let th5 = document.createElement("th");
+    th5.innerText = "ID độc giả";
     let th2 = document.createElement("th");
     th2.innerText = "Độc giả";
     let th3 = document.createElement("th");
@@ -41,6 +43,7 @@ function initListCard() {
     th4.innerText = "Ngày tạo";
 
     titleRow.appendChild(th1);
+    titleRow.appendChild(th5);
     titleRow.appendChild(th2);
     titleRow.appendChild(th3);
     titleRow.appendChild(th4);
@@ -86,8 +89,11 @@ function addCardToUI(card) {
     let cardId = document.createElement("td");
     cardId.innerText = card.borrowCardId;
 
-    let reader = document.createElement("td");
-    reader.innerText = card.readerName;
+    let readerId = document.createElement("td");
+    readerId.innerText = card.readerId;
+
+    let readerName = document.createElement("td");
+    readerName.innerText = card.readerName;
 
     let user = document.createElement("td");
     user.innerText = card.userName;
@@ -96,7 +102,8 @@ function addCardToUI(card) {
     createdAt.innerText = formateDate(card.createdAt);
 
     row.appendChild(cardId);
-    row.appendChild(reader);
+    row.appendChild(readerId);
+    row.appendChild(readerName);
     row.appendChild(user);
     row.appendChild(createdAt);
 
@@ -110,6 +117,64 @@ function addCardToUI(card) {
     });
 
     listCard.appendChild(row);
+}
+
+function initOptionCard() {
+    let buttonDiv = document.createElement("div");
+    buttonDiv.style.display = "flex";
+
+    let allBtn = document.createElement("input");
+    allBtn.id = "allBtn";
+    allBtn.name = "option";
+    allBtn.type = "radio";
+    allBtn.value = "all";
+    allBtn.checked = true;
+    let lbAll = document.createElement("label");
+    lbAll.htmlFor = "allBtn";
+    lbAll.innerText = "Tất cả";
+
+    let borrowingBtn = document.createElement("input");
+    borrowingBtn.id = "borrowingBtn";
+    borrowingBtn.name = "option";
+    borrowingBtn.type = "radio";
+    borrowingBtn.value = "borrowing";
+    let lbborrowing = document.createElement("label");
+    lbborrowing.htmlFor = "borrowingBtn";
+    lbborrowing.innerText = "Đang mượn";
+
+    let returnedBtn = document.createElement("input");
+    returnedBtn.id = "returnedBtn";
+    returnedBtn.name = "option";
+    returnedBtn.type = "radio";
+    returnedBtn.value = "returned";
+    let lbreturned = document.createElement("label");
+    lbreturned.htmlFor = "returnedBtn";
+    lbreturned.innerText = "Đã trả";
+
+    buttonDiv.appendChild(allBtn);
+    buttonDiv.appendChild(lbAll);
+    buttonDiv.appendChild(borrowingBtn);
+    buttonDiv.appendChild(lbborrowing);
+    buttonDiv.appendChild(returnedBtn);
+    buttonDiv.appendChild(lbreturned);
+
+    return buttonDiv;
+}
+
+async function searchCard(target, option) {
+    let cards = await fetch("/api/borrowCard/searchCard?target=" + target + "&option=" + option).then(res => res.json());
+
+    if (cards.length === 0) {
+        alert("Không có kết quả phù hợp");
+        return;
+    }
+
+    let borrowBooks = document.querySelectorAll(".row");
+    borrowBooks.forEach(book => book.remove());
+
+    for (let i = 0; i < cards.length; i++) {
+        addCardToUI(cards[i]);
+    }
 }
 
 manageBorrowCardBtn.addEventListener("click", async function () {
@@ -142,6 +207,9 @@ manageBorrowCardBtn.addEventListener("click", async function () {
     });
     mainView.appendChild(createCardBtn);
 
+    let buttonDiv = initOptionCard();
+    mainView.appendChild(buttonDiv);
+
     let searchInputCard = document.createElement("input");
     searchInputCard.classList.add("searchInputCard");
     searchInputCard.placeholder = "Tìm kiếm độc giả...";
@@ -154,6 +222,17 @@ manageBorrowCardBtn.addEventListener("click", async function () {
     searchCardForm.classList.add("searchCardForm");
     searchCardForm.appendChild(searchInputCard);
     searchCardForm.appendChild(buttonSearch);
+    searchCardForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        let option = document.querySelector('input[name="option"]:checked')?.value;
+        let target = document.querySelector(".searchInputCard").value.trim();
+        if (target === "") {
+            alert("Vui lòng nhập mã độc giả để tìm kiếm");
+            return;
+        }
+
+        await searchCard(target, option);
+    });
     mainView.appendChild(searchCardForm);
 
     initListCard();
@@ -312,7 +391,7 @@ acptCreateCard.addEventListener("click", async function () {
             isError = true;
             return;
         }
-        
+
         if ((book.cells)[0].innerText.trim() === "" && (book.cells)[1].innerText.trim() === "" && (book.cells)[2].querySelector("input").value === "") book.remove();
     });
     if (isError) return;
@@ -350,7 +429,7 @@ acptCreateCard.addEventListener("click", async function () {
     let borrowCardId = Number(response);
 
     let borrowBooks = [];
-    for (let i=0; i<rowBooks.length; i++) {
+    for (let i = 0; i < rowBooks.length; i++) {
         borrowBooks.push({
             borrowCardId: borrowCardId,
             bookId: (rowBooks[i].cells)[0].innerText,

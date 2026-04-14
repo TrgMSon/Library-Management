@@ -23,7 +23,9 @@ public class BorrowCardService {
         ArrayList<BorrowCardDTO> borrowCardDTOs = new ArrayList<>();
 
         for (BorrowCard borrowCard : borrowCards) {
-            borrowCardDTOs.add(new BorrowCardDTO(borrowCard.getBorrowCardId(), borrowCard.getReader().getReaderId(), borrowCard.getReader().getName(), borrowCard.getUser().getUserId(), borrowCard.getUser().getName(), borrowCard.getCreatedAt()));
+            borrowCardDTOs.add(new BorrowCardDTO(borrowCard.getBorrowCardId(), borrowCard.getReader().getReaderId(),
+                    borrowCard.getReader().getName(), borrowCard.getUser().getUserId(), borrowCard.getUser().getName(),
+                    borrowCard.getCreatedAt()));
         }
         return borrowCardDTOs;
     }
@@ -45,10 +47,29 @@ public class BorrowCardService {
         ArrayList<BorrowCardDetail> borrowCardDetails = borrowCardRepo.findBorrowCardDetail(cardId);
         ArrayList<BookInCardDTO> books = new ArrayList<>();
         for (BorrowCardDetail borrowCardDetail : borrowCardDetails) {
-            books.add(new BookInCardDTO(borrowCardDetail.getBook().getBookId(), borrowCardDetail.getBook().getName(), borrowCardDetail.getStatus(), borrowCardDetail.getExpire(), borrowCardDetail.getReturnDate()));
+            books.add(new BookInCardDTO(borrowCardDetail.getBook().getBookId(), borrowCardDetail.getBook().getName(),
+                    borrowCardDetail.getStatus(), borrowCardDetail.getExpire(), borrowCardDetail.getReturnDate()));
         }
         detailCard.setBooks(books);
 
         return detailCard;
+    }
+
+    public ArrayList<BorrowCardDTO> searchCard(String target, String option) {
+        ArrayList<BorrowCard> borrowCards = new ArrayList<>();
+        if (option.equals("all"))
+            borrowCards = borrowCardRepo.findCardById(Integer.parseInt(target));
+        else if (option.equals("borrowing"))
+            borrowCards = borrowCardRepo.findBorrowingCard(Integer.parseInt(target));
+        else
+            borrowCards = borrowCardRepo.findReturnedCard(Integer.parseInt(target));
+
+        ArrayList<BorrowCardDTO> borrowCardDTOs = new ArrayList<>();
+        for (BorrowCard borrowCard : borrowCards) {
+            borrowCardDTOs.add(new BorrowCardDTO(borrowCard.getBorrowCardId(), borrowCard.getReader().getReaderId(),
+                    borrowCard.getReader().getName(), borrowCard.getUser().getUserId(), borrowCard.getUser().getName(),
+                    borrowCard.getCreatedAt()));
+        }
+        return borrowCardDTOs;
     }
 }
