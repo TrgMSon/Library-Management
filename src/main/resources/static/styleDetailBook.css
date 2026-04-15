@@ -30,10 +30,9 @@
     border: 1px solid black;
 }
 
-#goBackBtn {
-    width: 15%;
-    align-self: center;
-    margin-bottom: 20px;
+#goBackBtn, #deleteBtn, #editBtn {
+    width: fit-content;
+    font-size: 18px;
 }
 
 #descElement {
@@ -53,4 +52,56 @@
 #quantity {
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.btnDiv {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    width: 40%;
+    height: fit-content;
+    margin-bottom: 30px;
+}
+
+.infor-div {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 30%;
+    top: 100px;
+    width: 600px;
+    height: 600px;
+    z-index: 10;
+    padding: 28px;
+    overflow: auto;
+    overflow-y: scroll;
+    border: 1px solid black;
+    background-color: white;
+}
+
+.infor-div label {
+    font-size: 22px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.infor-div input {
+    font-size: 16px;
+}
+
+.infor-div textarea {
+    font-size: 16px;
+    min-height: 120px;
+    resize: none;
+    height: fit-content;
+}
+
+.infor-div button {
+    margin-top: 20px;
+    width: 40%;
+    align-self: center;
+}
+
+#qty {
+    margin-bottom: 10px;
 }

@@ -13,6 +13,12 @@ const createCardDiv = document.querySelector(".createCardDiv");
 const userLabel = document.getElementById("userLabel");
 const manageEmployee = document.getElementById("manageEmployee");
 const overView = document.getElementById("overView");
+const inforDiv = document.querySelector(".infor-div");
+const addBookBtn = document.getElementById("addBookBtn");
+const waiting = document.getElementById("waiting");
+
+waiting.classList.add("hide");
+inforDiv.style.display = "none";
 
 if (userLabel.dataset.role === "user") {
     manageEmployee.style.display = "none";
@@ -193,4 +199,127 @@ mainView.addEventListener("click", async function (e) {
 logoutBtn.addEventListener("click", async function (e) {
     e.preventDefault();
     window.location.href = "/logout";
+});
+
+addBookBtn.addEventListener("click", function () {
+    inforDiv.style.display = "flex";
+    addBookBtn.style.textDecoration = "underline";
+    addBookBtn.style.color = "#c45500";
+});
+
+inforDiv.addEventListener("click", async function (e) {
+    if (e.target.classList.contains("acptBtn")) {
+        waiting.classList.remove("hide");
+
+        let nameInput = document.getElementById("bookName");
+        let authorInput = document.getElementById("author");
+        let descInput = document.getElementById("desc");
+        let publishInput = document.getElementById("publish");
+        let typeInput = document.getElementById("type");
+        let qtyInput = document.getElementById("qty");
+        let imgInput = document.getElementById("imgInput");
+
+        let name = nameInput.value.trim();
+        let author = authorInput.value.trim();
+        let description = descInput.value.trim();
+        let publish = publishInput.value.trim();
+        let type = typeInput.value.trim();
+        let quantity = qtyInput.value.trim();
+        let files = imgInput.files;
+
+        if (name === "") {
+            nameInput.focus();
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+
+        if (author === "") {
+            authorInput.focus();
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+
+        if (publish === "") {
+            publishInput.focus();
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+
+        if (description === "") {
+            descInput.focus();
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+
+        if (type === "") {
+            typeInput.focus();
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+
+        if (quantity === "") {
+            qtyInput.focus();
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+
+        if (files.length === 0) {
+            alert("Vui lòng nhập đủ thông tin");
+            waiting.classList.add("hide");
+            return;
+        }
+        else {
+            let formData = new FormData();
+            let image = files[0];
+            if (image.size > 20 * 1024 * 1024) {
+                alert("Ảnh gửi lên quá 20MB, vui lòng thử lại");
+                return;
+            }
+
+            formData.append("image", image);
+            let response = await fetch("/api/book/upload-image", {
+                method: "POST",
+                body: formData
+            });
+
+            let urlImg = await response.text();
+
+            await fetch("/api/book/addBook", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    bookId: e.target.dataset.bookId,
+                    name: name,
+                    author: author,
+                    description: description,
+                    publish: publish,
+                    type: type,
+                    quantity: quantity,
+                    urlImg: urlImg
+                })
+            });
+        }
+
+        alert("Cập nhật thành công");
+        waiting.classList.add("hide");
+
+        inforDiv.style.display = "none";
+        addBookBtn.style.textDecoration = "";
+        addBookBtn.style.color = "";
+        window.location.reload();
+    }
+
+    else if (e.target.classList.contains("closeBtn")) {
+        inforDiv.style.display = "none";
+        addBookBtn.style.textDecoration = "";
+        addBookBtn.style.color = "";
+    }
 });

@@ -42,6 +42,7 @@ public class MainController {
 
         if (result != null) {
             session.setAttribute("userId", result.getUserId() + "");
+            session.setAttribute("role", result.getRole());
             return "redirect:/home";
         }
         else {
@@ -89,9 +90,16 @@ public class MainController {
     }
 
     @GetMapping("/viewDetail")
-    public String showDetail(@RequestParam int bookId, Model model) {
+    public String showDetail(@RequestParam int bookId, Model model, HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) return "redirect:/login";
+
         Book book = bookService.findBookById(bookId);
         model.addAttribute("book", book);
+
+        String role = (String) session.getAttribute("role");
+        model.addAttribute("role", role);
+
         return "detailBook";
     }
 

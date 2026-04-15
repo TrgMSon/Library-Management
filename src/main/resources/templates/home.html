@@ -29,6 +29,7 @@
                 </div>
 
                 <div class="optionDiv">
+                    <p id="addBookBtn">Thêm đầu sách</p>
                     <p id="manageBorrowCard">Quản lý phiếu mượn</p>
                     <p id="manageReader">Quản lý độc giả</p>
                     <p id="manageEmployee">Quản lý nhân viên</p>
@@ -43,6 +44,33 @@
                     <img th:src="${book.urlImg}">
                     <p th:text="${book.name}"></p>
                     <button class="viewDetailBtn" th:data-book-id="${book.bookId}">Xem chi tiết</button>
+                </div>
+            </div>
+
+            <div class="infor-div">
+                <label for="bookName">Tên sách:</label>
+                <input type="text" id="bookName">
+
+                <label for="author">Tác giả:</label>
+                <input type="text" id="author">
+
+                <label for="publish">Năm xuất bản:</label>
+                <input type="text" id="publish">
+
+                <label for="type">Thể loại:</label>
+                <input type="text" id="type">
+
+                <label for="desc">Mô tả:</label>
+                <textarea type="text" id="desc"></textarea>
+
+                <label for="qty">Số lượng:</label>
+                <input type="text" id="qty">
+
+                <input type="file" id="imgInput" accept="image/*">
+
+                <div class="btnDiv">
+                    <button class="closeBtn">Đóng</button>
+                    <button class="acptBtn">Xác nhận</button>
                 </div>
             </div>
 
@@ -130,6 +158,10 @@
                 </div>
             </div>
 
+        </div>
+
+        <div class="backdrop" id="waiting">
+            <img src="https://res.cloudinary.com/dsrecf30u/image/upload/v1775634843/rajinikanth_grfrwm.gif">
         </div>
 
     </div>

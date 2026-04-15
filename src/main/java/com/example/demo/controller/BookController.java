@@ -1,14 +1,22 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.example.demo.dto.BookDTO;
+import com.example.demo.dto.BookDeleteDTO;
 import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
 
@@ -41,8 +49,36 @@ public class BookController {
         return bookService.searchBookType(type, name);
     }
 
-    @GetMapping("/searchBook")
-    public ArrayList<Book> searchBook(@RequestParam String name) {
-        return bookService.searchBook(name);
+    @GetMapping("/searchBookName")
+    public ArrayList<Book> searchBookByName(@RequestParam String name) {
+        return bookService.searchBookByName(name);
+    }
+
+    @GetMapping("/searchBookId")
+    public Book searchBookById(@RequestParam int bookId) {
+        return bookService.searchBookById(bookId);
+    }
+    
+    @PostMapping("/deleteBook")
+    public boolean deleteBook(@RequestBody BookDeleteDTO bookDeleteDTO) {
+        if (bookService.checkBookInCard(bookDeleteDTO.getBookId())) return false;
+        bookService.deleteBook(bookDeleteDTO.getBookId());
+        return true;
+    } 
+
+    @PostMapping("/updateBook")
+    public void updateBook(@RequestBody BookDTO bookDTO) {
+        bookService.updateBook(bookDTO);
+    }
+
+    @PostMapping("/upload-image")
+    public String uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+        Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        return uploadResult.get("url").toString();
+    }
+
+    @PostMapping("/addBook")
+    public void addBook(@RequestBody BookDTO book) {
+        bookService.addBook(book);
     }
 }
