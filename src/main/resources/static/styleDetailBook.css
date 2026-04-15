@@ -12,6 +12,10 @@
     margin-left: 90px;
 }
 
+.top-taskbar button:hover {
+    border: 1px solid #131921;
+}
+
 .content-book {
     display: flex;
     flex-direction: column;

@@ -4,7 +4,9 @@ const deleteBtn = document.getElementById("deleteBtn");
 const userIdLoginP = document.getElementById("userIdLoginP");
 const mainView = document.querySelector(".main-view-detail-book");
 const inforDiv = document.querySelector(".infor-div");
+const goHomeBtn = document.getElementById("goHomeBtn");
 
+goHomeBtn.style.cursor = "default";
 inforDiv.style.display = "none";
 
 if (userIdLoginP.dataset.role === "user") {
