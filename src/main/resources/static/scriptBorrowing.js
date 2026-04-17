@@ -1,14 +1,7 @@
 const searchForm = document.getElementById("searchForm");
 const goHomeBtn = document.getElementById("goHomeBtn");
 const listCard = document.createElement("table");
-const cardIdElement = document.getElementById("cardIdElement");
-const userElement = document.getElementById("userElement");
-const readerElement = document.getElementById("readerElement");
-const createdElement = document.getElementById("createdElement");
-const listBorrowBook = document.querySelector(".listBorrowBook");
 const noteContent = document.getElementById("noteContent");
-const totalAmountInput = document.getElementById("totalAmountInput");
-const goBackBtn = document.getElementById("goBack");
 const acptEditCard = document.getElementById("acpt");
 const cancelCreateCard = document.getElementById("cancelCreateCard");
 const acptCreateCard = document.getElementById("acptCreateCard");
@@ -108,12 +101,7 @@ function addCardToUI(card) {
     row.appendChild(createdAt);
 
     row.addEventListener("click", async function () {
-        let rowBook = document.querySelectorAll(".rowBook");
-        rowBook.forEach(book => book.remove());
-
-        loadDetailCard(row);
-        mainView.style.display = "none";
-        cardDiv.style.display = "flex";
+        loadDetailCardForReturn(row.dataset.borrowCardId);
     });
 
     listCard.appendChild(row);
@@ -243,65 +231,6 @@ manageBorrowCardBtn.addEventListener("click", async function () {
     }
 
     mainView.appendChild(listCard);
-});
-
-function addBorrowBook(book) {
-    let row = document.createElement("tr");
-    row.classList.add("rowBook");
-
-    let bookIdElement = document.createElement("td");
-    bookIdElement.innerText = book.bookId;
-
-    let bookNameElement = document.createElement("td");
-    bookNameElement.innerText = book.bookName;
-
-    let expireElement = document.createElement("td");
-    expireElement.innerText = formateDate(book.expire);
-
-    let returnDateElement = document.createElement("td");
-    returnDateElement.innerText = book.returnDate;
-
-    let statusElement = document.createElement("td");
-    if (book.status === "borrowing") statusElement.innerText = "Chưa trả";
-    else statusElement.innerText = "Đã trả";
-
-    let actionElement = document.createElement("td");
-    actionElement.classList.add("actionReturn");
-    if (book.status === "borrowing") actionElement.innerText = "Trả";
-    else actionElement.innerText = "";
-
-    row.appendChild(bookIdElement);
-    row.appendChild(bookNameElement);
-    row.appendChild(expireElement);
-    row.appendChild(returnDateElement);
-    row.appendChild(statusElement);
-    row.appendChild(actionElement);
-
-    listBorrowBook.appendChild(row);
-}
-
-async function loadDetailCard(row) {
-    let cardDetail = await fetch("/api/borrowCard/getDetailCard?cardId=" + row.dataset.borrowCardId).then(res => res.json());
-
-    cardIdElement.innerText = "ID: " + cardDetail.borrowCardId;
-    userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
-    readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
-    createdElement.innerText = "Ngày tạo: " + cardDetail.createdAt;
-
-    let books = cardDetail.books;
-    for (let i = 0; i < books.length; i++) {
-        addBorrowBook(books[i]);
-    }
-}
-
-goBackBtn.addEventListener("click", function () {
-    cardDiv.style.display = "none";
-    mainView.style.display = "flex";
-});
-
-cancelCreateCard.addEventListener("click", function () {
-    createCardDiv.style.display = "none";
-    mainView.style.display = "flex";
 });
 
 function addRow() {

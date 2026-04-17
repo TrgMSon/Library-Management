@@ -103,8 +103,7 @@
                 </div>
 
                 <div class="noteDiv">
-                    <label for="totalAmountInput">Tiền phạt:</label>
-                    <input type="text" id="totalAmountInput">
+                    <span for="totalAmount">Tổng tiền đã phạt: <span id="totalAmount"></span></span>
                     <label for="noteContent">Ghi chú:</label>
                     <textarea id="noteContent"></textarea>
                 </div>
@@ -168,6 +167,7 @@
 
     <script th:src="@{/scriptHome.js}"></script>
     <script th:src="@{/scriptBorrowing.js}"></script>
+    <script th:src="@{/scriptReturn.js}"></script>
 </body>
 
 </html>
