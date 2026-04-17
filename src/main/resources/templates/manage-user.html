@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý người dùng</title>
+    <style>
+        :root {
+            --primary: #2563EB; /* Màu xanh lam chuyên nghiệp */
+            --danger: #DC2626;  /* Màu đỏ cho nút xoá */
+            --warning: #D97706; /* Màu cam cho nút sửa */
+            --bg: #F3F4F6;
+            --surface: #FFFFFF;
+            --text: #1F2937;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .card {
+            background: var(--surface); padding: 1.5rem;
+            border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #E5E7EB; }
+        th { background-color: #F9FAFB; font-weight: 600; }
+
+        button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; }
+        button:hover { opacity: 0.8; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-secondary { background: #E5E7EB; color: #374151; }
+
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #D1D5DB; border-radius: 4px; box-sizing: border-box; }
+
+        /* Kiểu dáng cho Hộp thoại (Modal) */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); z-index: 1000;
+            align-items: center; justify-content: center;
+        }
+        .modal-box {
+            background: var(--surface); padding: 2rem; border-radius: 8px;
+            max-width: 400px; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+
+        .empty-msg { text-align: center; color: #6B7280; font-style: italic; padding: 2rem; }
+        .role-badge { padding: 4px 8px; border-radius: 9999px; font-size: 0.875rem; background: #E5E7EB; }
+        .role-admin { background: #FEE2E2; color: #991B1B; }
+        .role-user { background: #DBEAFE; color: #1E40AF; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Quản lý người dùng</h2>
+    </div>
+
+    <div class="card">
+        <h3>Thêm người dùng mới</h3>
+        <form id="addUserForm">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; min-width: 200px;">
+                    <label>Họ và Tên</label>
+                    <input type="text" id="addName" required>
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 200px;">
+                    <label>Email</label>
+                    <input type="email" id="addEmail" required>
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 200px;">
+                    <label>Mật khẩu</label>
+                    <input type="password" id="addPassword" required>
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 200px;">
+                    <label>Vai trò</label>
+                    <select id="addRole" required>
+                        <option value="user">Người dùng</option>
+                        <option value="admin">Quản trị viên</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top: 1rem;">Thêm người dùng</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <div th:if="${msg}" class="empty-msg" th:text="${msg}"></div>
+
+        <table th:if="${user_list != null}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Họ và Tên</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${user_list}">
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                        <span th:class="${user.role == 'admin'} ? 'role-badge role-admin' : 'role-badge role-user'"
+                              th:text="${user.role == 'admin' ? 'Quản trị viên' : 'Người dùng'}"></span>
+                </td>
+                <td>
+                    <button class="btn-warning" th:attr="onclick=|openEditModal(${user.userId})|">Sửa</button>
+                    <button class="btn-danger" th:attr="onclick=|openDeleteModal(${user.userId})|">Xoá</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="editModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3>Sửa Thông tin</h3>
+        <form id="editUserForm">
+            <input type="hidden" id="editId">
+            <div class="form-group">
+                <label>Họ và Tên</label>
+                <input type="text" id="editName" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="editEmail" required>
+            </div>
+            <div class="form-group">
+                <label>Vai trò</label>
+                <select id="editRole" required>
+                    <option value="user">Người dùng</option>
+                    <option value="admin">Quản trị viên</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal('editModal')">Hủy</button>
+                <button type="submit" class="btn-primary">Lưu Thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-box" style="text-align: center;">
+        <h3 style="margin-top: 0;">Xác nhận xoá</h3>
+        <p>Bạn có chắc chắn muốn xoá người dùng này không? Hành động này không thể hoàn tác.</p>
+        <div class="modal-actions" style="justify-content: center;">
+            <button class="btn-secondary" onclick="closeModal('deleteModal')">Hủy</button>
+            <button class="btn-danger" onclick="executeDelete()">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = '/api/user';
+    let targetUserId = null;
+
+    // --- THÊM Người DÙNG ---
+    document.getElementById('addUserForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const payload = {
+            name: document.getElementById('addName').value,
+            email: document.getElementById('addEmail').value,
+            password: document.getElementById('addPassword').value,
+            role: document.getElementById('addRole').value
+        };
+
+        fetch(`${API_BASE}/add_user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Thêm Người dùng thành công!");
+                window.location.reload();
+            } else {
+                response.text().then(text => alert("Lỗi: " + text));
+            }
+        });
+    });
+
+    // --- SỬA Người DÙNG ---
+    function openEditModal(id) {
+        fetch(`${API_BASE}/${id}`)
+            .then(res => {
+                if (!res.ok) throw new Error("Không thể tải thông tin");
+                return res.json();
+            })
+            .then(user => {
+                document.getElementById('editId').value = user.userId;
+                document.getElementById('editName').value = user.name;
+                document.getElementById('editEmail').value = user.email;
+                document.getElementById('editRole').value = user.role;
+                document.getElementById('editModal').style.display = 'flex';
+            })
+            .catch(err => alert(err.message));
+    }
+
+    document.getElementById('editUserForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const payload = {
+            userId: document.getElementById('editId').value,
+            name: document.getElementById('editName').value,
+            email: document.getElementById('editEmail').value,
+            role: document.getElementById('editRole').value
+        };
+
+        fetch(`${API_BASE}/update_user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Cập nhật thành công!");
+                window.location.reload();
+            } else {
+                response.text().then(text => alert("Lỗi: " + text));
+            }
+        });
+    });
+
+    // --- XOÁ Người DÙNG ---
+    function openDeleteModal(id) {
+        targetUserId = id;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function executeDelete() {
+        if (!targetUserId) return;
+
+        fetch(`${API_BASE}/${targetUserId}/delete`, { method: 'GET' })
+        .then(response => {
+            if (response.ok) {
+                alert("Xoá Người dùng thành công!");
+                window.location.reload();
+            } else {
+                response.text().then(text => alert("Lỗi: " + text));
+            }
+        });
+    }
+
+    // --- ĐÓNG HỘP THOẠI ---
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        targetUserId = null;
+    }
+</script>
+
+</body>
+</html>

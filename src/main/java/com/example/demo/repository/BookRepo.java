@@ -9,10 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.model.Book;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.repository.query.Param;
 
 public interface BookRepo extends JpaRepository<Book, Integer> {
     @Query(value = "SELECT * FROM book WHERE type=?1", nativeQuery = true)
     ArrayList<Book> findAllBookType(String type);
+
+//    @Query("SELECT b FROM Book b WHERE b.type = :type")
+//    ArrayList<Book> findAllBookType(@Param("type") String type);
 
     @Query(value = "SELECT * FROM book WHERE book_id = ?1", nativeQuery = true)
     Book findBookById(int bookId);

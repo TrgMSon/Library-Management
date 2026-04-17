@@ -1,46 +1,35 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.demo.dto.CreateCardDTO;
-import com.example.demo.dto.CreateCardDetailInput;
-import com.example.demo.service.ReaderService;
-
-import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.model.Reader;
+import com.example.demo.model.User;
+import com.example.demo.repository.ReaderRepo;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 
-
-@RestController
-@RequestMapping("/api/reader")
+@Controller
+@RequiredArgsConstructor
 public class ReaderController {
-    @Autowired
-    private ReaderService readerService;
-    
-    @GetMapping("/checkReaderInfor")
-    public boolean checkReaderInfor(@RequestParam int readerId) {
-        return readerService.getReaderInfor(readerId) != null;
+    private final ReaderRepo readerRepo;
+
+    @GetMapping("/manage_reader")
+    public String openReaderManagementPage(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("loggedInUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        List<Reader> readerList = readerRepo.findAll();
+        if (readerList.isEmpty()) {
+            model.addAttribute("msg", "Chưa có độc giả nào!");
+            return "manage-reader";
+        }
+
+        model.addAttribute("reader_list", readerList);
+        return "manage-reader";
     }
-    
-    @GetMapping("/checkBorrowingBook")
-    public String checkBorrowingBook(@RequestParam int readerId) {
-        return readerService.checkBorrowingBook(readerId) + "";
-    }
-    
-    @PostMapping("/createBorrowCard")
-    public String createBorrowCard(@RequestBody CreateCardDTO card) {
-        return readerService.createCard(card);
-    }
-    
-    @PostMapping("/addDetailCard")
-    public ArrayList<String> addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
-        return readerService.addDetailCard(cardDetailInput.getCardDetails());
-    }
-    
 }
