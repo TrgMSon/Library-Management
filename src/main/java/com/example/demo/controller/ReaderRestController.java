@@ -53,25 +53,25 @@ public class ReaderRestController {
         return readerService.addDetailCard(cardDetailInput.getCardDetails());
     }
 
-    @PostMapping("/add_reader")
-    public ResponseEntity<String> processAddingReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
-        }
-
-        String name = readerDTO.getName();
-        String email = readerDTO.getEmail();
-        String address = readerDTO.getAddress();
-
-        Reader reader = new Reader();
-        reader.setName(name);
-        reader.setEmail(email);
-        reader.setAddress(address);
-
-        readerRepo.save(reader);
-        return ResponseEntity.ok().body("Thêm độc giả thành công!");
-    }
+//    @PostMapping("/add_reader")
+//    public ResponseEntity<String> processAddingReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
+//        String userId = (String) session.getAttribute("userId");
+//        if (userId == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
+//        }
+//
+//        String name = readerDTO.getName();
+//        String email = readerDTO.getEmail();
+//        String address = readerDTO.getAddress();
+//
+//        Reader reader = new Reader();
+//        reader.setName(name);
+//        reader.setEmail(email);
+//        reader.setAddress(address);
+//
+//        readerRepo.save(reader);
+//        return ResponseEntity.ok().body("Thêm độc giả thành công!");
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Reader> getReader(HttpSession session, @PathVariable int id) {

@@ -97,8 +97,14 @@
 
     <div class="card">
         <div th:if="${msg}" class="empty-msg" th:text="${msg}"></div>
+        <div style="margin-bottom: 1.5rem;">
+            <input type="text" id="searchInput" placeholder="Nhập tên người dùng hoặc email: "
+                   style="width: 100%; padding: 10px 15px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+        </div>
 
-        <table th:if="${user_list != null}">
+        <div th:if="${msg}" class="empty-msg" th:text="${msg}"></div>
+
+        <table th:if="${user_list != null}" id="userTable">
             <thead>
             <tr>
                 <th>ID</th>
@@ -174,6 +180,27 @@
 
     document.getElementById("btn-goBack").addEventListener("click", function () {
         window.history.back();
+    });
+
+// --- TÌM KIẾM NGƯỜI DÙNG ---
+    document.getElementById('searchInput').addEventListener('input', function() {
+        // Lấy giá trị đang gõ và chuyển thành chữ thường
+        const searchValue = this.value.toLowerCase();
+
+        // Lấy tất cả các hàng (tr) trong phần thân của bảng (tbody)
+        const tableRows = document.querySelectorAll('#userTable tbody tr');
+
+        tableRows.forEach(row => {
+            // Lấy toàn bộ văn bản của hàng đó (Tên, Email, Vai trò)
+            const rowText = row.textContent.toLowerCase();
+
+            // Nếu văn bản trong hàng chứa từ khoá tìm kiếm thì hiện, ngược lại thì ẩn
+            if (rowText.includes(searchValue)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     });
 
     // --- THÊM Người DÙNG ---

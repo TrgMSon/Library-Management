@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Độc giả</title>
+    <title>Quản lý độc giả</title>
     <style>
         :root {
-            --primary: #059669; /* A nice green for the library theme */
+            --primary: #059669;
             --danger: #EF4444;
             --warning: #F59E0B;
             --bg: #F3F4F6;
@@ -61,34 +61,20 @@
 
 <div class="container">
     <div class="header">
-        <h2>Quản lý Độc giả</h2>
+        <h2>Quản lý độc giả</h2>
     </div>
 
     <div class="card">
-        <h3>Thêm Độc giả Mới</h3>
-        <form id="addReaderForm">
-            <div style="display: flex; gap: 1rem;">
-                <div class="form-group" style="flex: 1;">
-                    <label>Họ và Tên</label>
-                    <input type="text" id="addName" required>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>Email</label>
-                    <input type="email" id="addEmail" required>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>Địa chỉ nhà</label>
-                    <input type="text" id="addAddress" required>
-                </div>
-            </div>
-            <button type="submit" class="btn-primary">Thêm</button>
-        </form>
-    </div>
 
-    <div class="card">
+        <div style="margin-bottom: 1.5rem;">
+            <input type="text" id="searchInput" placeholder="Nhập tên độc giả, email, hoặc địa chỉ:
+"
+                   style="width: 100%; padding: 10px 15px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+        </div>
+
         <div th:if="${msg}" class="empty-msg" th:text="${msg}"></div>
 
-        <table th:if="${reader_list != null}">
+        <table th:if="${reader_list != null}" id="readerTable">
             <thead>
             <tr>
                 <th>ID</th>
@@ -157,6 +143,7 @@
     let targetReaderId = null;
     let role = document.getElementById("btn-goBack").dataset.role;
 
+    // Ẩn nút Sửa/Xoá nếu role là user
     if (role === "user") {
         let editBtns = document.querySelectorAll(".btn-warning");
         editBtns.forEach(btn => btn.style.display = "none");
@@ -165,37 +152,28 @@
         delBtns.forEach(btn => btn.style.display = "none");
     }
 
+    // Nút quay lại
     document.getElementById("btn-goBack").addEventListener("click", function () {
         window.history.back();
     });
 
-    // --- ADD READER ---
-    document.getElementById('addReaderForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const payload = {
-            name: document.getElementById('addName').value,
-            email: document.getElementById('addEmail').value,
-            address: document.getElementById('addAddress').value
-        };
+    // --- TÌM KIẾM ĐỘC GIẢ (REAL-TIME SEARCH) ---
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll('#readerTable tbody tr');
 
-        fetch(`${API_BASE}/add_reader`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(response => {
-            if (response.ok) {
-                alert("Thêm độc giả thành công!");
-                window.location.reload(); // Reload to let Thymeleaf redraw the table
+        tableRows.forEach(row => {
+            const rowText = row.textContent.toLowerCase();
+            if (rowText.includes(searchValue)) {
+                row.style.display = '';
             } else {
-                response.text().then(text => alert("Lỗi: " + text));
+                row.style.display = 'none';
             }
         });
     });
 
-    // --- EDIT READER ---
+    // --- SỬA ĐỘC GIẢ ---
     function openEditModal(id) {
-        // Fetch current user data to populate the form
         fetch(`${API_BASE}/${id}`)
             .then(res => res.json())
             .then(reader => {
@@ -229,7 +207,7 @@
         });
     });
 
-    // --- DELETE READER ---
+    // --- XOÁ ĐỘC GIẢ ---
     function openDeleteModal(id) {
         targetReaderId = id;
         document.getElementById('deleteModal').style.display = 'flex';
@@ -249,7 +227,7 @@
         });
     }
 
-    // --- UTILS ---
+    // --- ĐÓNG HỘP THOẠI ---
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
         targetReaderId = null;
