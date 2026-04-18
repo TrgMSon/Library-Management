@@ -33,4 +33,9 @@ public interface ReaderRepo extends JpaRepository<Reader, Integer> {
     @Modifying
     @Query(value = "INSERT INTO borrow_card_detail(borrow_card_id, book_id, expire, status) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
     void addDetailCard(int borrowCardId, int bookId, LocalDateTime expire, String status);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE book SET quantity = quantity - ?1 WHERE quantity >= ?1 AND book_id = ?2", nativeQuery = true)
+    int decreaseQtyBook(int quantityBorrow, int bookId);
 }

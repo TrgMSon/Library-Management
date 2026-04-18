@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Book Store</title>
+    <title>Library Manage</title>
     <link rel="stylesheet" th:href="@{/styleHome.css}">
     <link rel="stylesheet" th:href="@{/styleDetailBook.css}">
 </head>
@@ -10,7 +10,8 @@
 <body>
     <div class="main">
         <div class="top-taskbar">
-            <button id="goHomeBtn">Book Store</button>
+            <button id="goHomeBtn">Library Manage</button>
+            <p id="userIdLoginP" th:data-role="${role}" hidden></p>
         </div>
 
         <div class="main-view-detail-book">
@@ -22,13 +23,45 @@
                 <label id="line"></label>
                 <p id="descElement" th:text="${book.description}"></p>
                 <div id="quantityDiv">
-                <label for="quantity">Số lượng có sẵn:</label>
-                <p th:text="${book.quantity}" id="quantity"></p>
+                    <label for="quantity">Số lượng có sẵn:</label>
+                    <p th:text="${book.quantity}" id="quantity"></p>
+                </div>
             </div>
+
+            <div class="infor-div">
+                <label for="bookName">Tên sách:</label>
+                <input type="text" id="bookName">
+
+                <label for="author">Tác giả:</label>
+                <input type="text" id="author">
+
+                <label for="publish">Năm xuất bản:</label>
+                <input type="text" id="publish">
+
+                <label for="type">Thể loại:</label>
+                <input type="text" id="type">
+
+                <label for="desc">Mô tả:</label>
+                <textarea type="text" id="desc"></textarea>
+
+                <label for="qty">Số lượng:</label>
+                <input type="text" id="qty">
+
+                <input type="file" id="imgInput" accept="image/*">
+
+                <div class="btnDiv">
+                    <button class="closeBtn" th:data-book-id="${book.bookId}">Đóng</button>
+                    <button class="acptBtn" th:data-book-id="${book.bookId}">Xác nhận</button>
+                </div>
             </div>
+            
         </div>
 
-        <button id="goBackBtn">Quay lại trang chủ</button>
+        <div class="btnDiv">
+            <button id="goBackBtn">Quay lại trang chủ</button>
+            <button id="editBtn" th:data-book-id="${book.bookId}">Sửa</button>
+            <button id="deleteBtn" th:data-book-id="${book.bookId}">Xóa</button>
+        </div>
     </div>
 </body>
 <script th:src="@{/scriptDetail.js}"></script>

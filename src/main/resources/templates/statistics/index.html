@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê - Quản lý thư viện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Thống kê thư viện</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Thống kê sách mượn nhiều</h5>
+                        <p class="card-text">Xem danh sách sách được mượn nhiều nhất.</p>
+                        <a href="/statistics/books" class="btn btn-primary">Xem thống kê</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Thống kê độc giả mượn nhiều</h5>
+                        <p class="card-text">Xem danh sách độc giả mượn nhiều nhất.</p>
+                        <a href="/statistics/readers" class="btn btn-success">Xem thống kê</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="/home" class="btn btn-secondary">Quay lại trang chủ</a>
+        </div>
+    </div>
+</body>
+</html>
