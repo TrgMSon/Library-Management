@@ -70,10 +70,6 @@ th, td {
     background-color: #A9A9A9;
 }
 
-#totalAmountInput {
-    width: 60%;
-}
-
 .actionReturn:hover {
     text-decoration: underline;
     font-weight: bold;

@@ -1,7 +1,3 @@
-/**
- * Xử lý sự kiện nhấn nút "Trả" trong trang quản lý phiếu mượn
- */
-
 let pendingReturns = {};
 const FINE_PER_DAY = 2000;
 const totalAmountElement = document.getElementById("totalAmount");
@@ -87,7 +83,6 @@ function updateTotalFine() {
         totalFine += pendingReturns[returnKey].fine;
     });
 
-    // Tạo hoặc lấy div hiển thị tiền phạt lần này
     let pendingFineDiv = document.getElementById("pendingFineDiv");
     if (!pendingFineDiv) {
         pendingFineDiv = document.createElement("div");
@@ -237,7 +232,6 @@ function cancelAllReturns() {
     alert("Đã huỷ tất cả");
 }
 
-// Gán hàm confirmAllReturns cho nút xác nhận
 document.addEventListener("DOMContentLoaded", function () {
     const acptBtn = document.getElementById("acpt");
     if (acptBtn) {
