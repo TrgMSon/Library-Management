@@ -1,17 +1,6 @@
-/**
- * Xử lý sự kiện nhấn nút "Trả" trong trang quản lý phiếu mượn
- */
-
 let pendingReturns = {};
 const FINE_PER_DAY = 2000;
-let currentCardId = null;
-const cardIdElement = document.getElementById("cardIdElement");
-const userElement = document.getElementById("userElement");
-const readerElement = document.getElementById("readerElement");
-const createdElement = document.getElementById("createdElement");
-const listBorrowBook = document.querySelector(".listBorrowBook tbody");
 const totalAmountElement = document.getElementById("totalAmount");
-const goBackBtn = document.getElementById("goBack");
 
 function formateDate(date) {
     let tmp = date.split("T");
@@ -19,49 +8,10 @@ function formateDate(date) {
     return `${tmp2[2]}/${tmp2[1]}/${tmp2[0]} ${tmp[1]}`;
 }
 
-function addBorrowBook(book) {
-    let row = document.createElement("tr");
-    row.classList.add("rowBook");
-
-    let bookIdElement = document.createElement("td");
-    bookIdElement.innerText = book.bookId;
-
-    let bookNameElement = document.createElement("td");
-    bookNameElement.innerText = book.bookName;
-
-    let expireElement = document.createElement("td");
-    expireElement.innerText = formateDate(book.expire);
-
-    let returnDateElement = document.createElement("td");
-    returnDateElement.innerText = book.returnDate || "";
-
-    let statusElement = document.createElement("td");
-    if (book.status === "borrowing") statusElement.innerText = "Chưa trả";
-    else statusElement.innerText = "Đã trả";
-
-    let actionElement = document.createElement("td");
-    if (book.status === "borrowing") {
-        let returnBtn = document.createElement("button");
-        returnBtn.type = "button";
-        returnBtn.classList.add("returnBtn");
-        returnBtn.innerText = "Trả";
-        actionElement.appendChild(returnBtn);
-    }
-
-    row.appendChild(bookIdElement);
-    row.appendChild(bookNameElement);
-    row.appendChild(expireElement);
-    row.appendChild(returnDateElement);
-    row.appendChild(statusElement);
-    row.appendChild(actionElement);
-
-    listBorrowBook.appendChild(row);
-}
-
 async function loadDetailCardForReturn(cardId) {
     let rowBook = document.querySelectorAll(".rowBook");
     rowBook.forEach(book => book.remove());
-    currentCardId=cardId;
+    currentCardId = cardId;
     pendingReturns = {};
 
     let cardDetail = await fetch("/api/borrowCard/getDetailCard?cardId=" + cardId).then(res => res.json());
@@ -70,7 +20,7 @@ async function loadDetailCardForReturn(cardId) {
     userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
     readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
     createdElement.innerText = "Ngày tạo: " + cardDetail.createdAt;
-    totalAmountElement.innerText = cardDetail.totalAmount +' đồng';
+    totalAmountElement.innerText = cardDetail.totalAmount + ' đồng';
 
     let books = cardDetail.books;
     for (let i = 0; i < books.length; i++) {
@@ -133,7 +83,6 @@ function updateTotalFine() {
         totalFine += pendingReturns[returnKey].fine;
     });
 
-    // Tạo hoặc lấy div hiển thị tiền phạt lần này
     let pendingFineDiv = document.getElementById("pendingFineDiv");
     if (!pendingFineDiv) {
         pendingFineDiv = document.createElement("div");
@@ -161,8 +110,7 @@ function updateTotalFine() {
 function handleReturnBook(button) {
     const row = button.closest("tr");
     const bookId = row.cells[0].innerText.trim();
-    const bookName = row.cells[1].innerText.trim();
-    const expireDate = row.cells[2].innerText.trim();
+    const expireDate = row.cells[1].innerText.trim();
 
     const borrowCardId = currentCardId;
     const fine = calculateFine(expireDate);
@@ -181,7 +129,6 @@ function handleReturnBook(button) {
     pendingReturns[returnKey] = {
         borrowCardId: parseInt(borrowCardId),
         bookId: parseInt(bookId),
-        bookName: bookName,
         fine: fine,
         row: row,
         button: button,
@@ -255,12 +202,12 @@ async function confirmAllReturns() {
                 totalFineConfirmed += item.fine;
                 delete pendingReturns[returnKey];
             } else {
-                alert("Lỗi trả sách " + item.bookName + ": " + result.message);
+                alert("Lỗi trả sách " + item.bookId + ": " + result.message);
             }
         }
 
-        alert("Xác nhận trả sách hoàn tát!");
-        await loadDetailCardForReturn(currentCardId);
+        alert("Xác nhận trả sách hoàn tất!");
+        loadDetailCardForReturn(currentCardId);
 
     } catch (error) {
         console.error("Lỗi:", error);
@@ -285,15 +232,18 @@ function cancelAllReturns() {
     alert("Đã huỷ tất cả");
 }
 
-// Gán hàm confirmAllReturns cho nút xác nhận
 document.addEventListener("DOMContentLoaded", function () {
     const acptBtn = document.getElementById("acpt");
     if (acptBtn) {
-        acptBtn.addEventListener("click", confirmAllReturns);
+        acptBtn.addEventListener("click", async function () {
+            await confirmAllReturns();
+        });
     }
 
     if (goBackBtn) {
         goBackBtn.addEventListener("click", function () {
+            resetCreateCard();
+            console.log("hello");
             cardDiv.style.display = "none";
             mainView.style.display = "flex";
             pendingReturns = {};
