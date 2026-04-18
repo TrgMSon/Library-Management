@@ -36,6 +36,7 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-secondary { background: #E5E7EB; color: #374151; }
+        #btn-goBack {background-color: #6B7280; color: white;}
 
         .form-group { margin-bottom: 1rem; }
         label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
@@ -111,6 +112,8 @@
             </tbody>
         </table>
     </div>
+
+    <button id="btn-goBack" type="button" th:data-role="${role}">Quay lại</button>
 </div>
 
 <div id="editModal" class="modal-overlay">
@@ -152,6 +155,19 @@
 <script>
     const API_BASE = '/api/reader';
     let targetReaderId = null;
+    let role = document.getElementById("btn-goBack").dataset.role;
+
+    if (role === "user") {
+        let editBtns = document.querySelectorAll(".btn-warning");
+        editBtns.forEach(btn => btn.style.display = "none");
+
+        let delBtns = document.querySelectorAll(".btn-danger");
+        delBtns.forEach(btn => btn.style.display = "none");
+    }
+
+    document.getElementById("btn-goBack").addEventListener("click", function () {
+        window.history.back();
+    });
 
     // --- ADD READER ---
     document.getElementById('addReaderForm').addEventListener('submit', function(e) {
@@ -219,16 +235,16 @@
         document.getElementById('deleteModal').style.display = 'flex';
     }
 
-    function executeDelete() {
+    async function executeDelete() {
         if (!targetReaderId) return;
 
-        fetch(`${API_BASE}/${targetReaderId}/delete`, { method: 'GET' })
+        await fetch(`${API_BASE}/${targetReaderId}/delete`, { method: 'GET' })
         .then(response => {
             if (response.ok) {
-                alert("Xoá người dùng thành công!");
+                alert("Xóa độc giả thành công");
                 window.location.reload();
             } else {
-                response.text().then(text => alert("Lỗi: " + text));
+                response.text().then(text => alert(text));
             }
         });
     }

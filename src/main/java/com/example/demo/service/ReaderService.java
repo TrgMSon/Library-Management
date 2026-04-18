@@ -5,23 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.model.BorrowCard;
-import com.example.demo.repository.BorrowCardRepo;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.CreateCardDTO;
 import com.example.demo.dto.CreateDetailCardDTO;
+import com.example.demo.model.BorrowCard;
 import com.example.demo.model.Reader;
+import com.example.demo.repository.BorrowCardRepo;
 import com.example.demo.repository.ReaderRepo;
 
 @Service
-@RequiredArgsConstructor
 public class ReaderService {
-    private final ReaderRepo readerRepo;
-    private final BorrowCardRepo borrowCardRepo;
+    @Autowired
+    private ReaderRepo readerRepo;
+
+    @Autowired
+    private BorrowCardRepo borrowCardRepo;
 
     public Reader getReaderInfor(int readerId) {
         Optional<Reader> reader = readerRepo.findById(readerId);
@@ -52,19 +52,16 @@ public class ReaderService {
         return bookIds;
     }
 
-    @Transactional
-    public void deleteReader(int id) {
+    public boolean deleteReader(int id) {
         Reader reader = readerRepo.findById(id).orElse(null);
         if (reader != null) {
             List<BorrowCard> borrowCardList = borrowCardRepo.findByReader(reader);
-            if (borrowCardList != null) {
-                for (BorrowCard borrowCard : borrowCardList) {
-                    borrowCard.setReader(null);
-                }
-
-                borrowCardRepo.saveAll(borrowCardList);
+            if (borrowCardList != null) return false;
+            else {
                 readerRepo.delete(reader);
+                return true;
             }
         }
+        return false;
     }
 }

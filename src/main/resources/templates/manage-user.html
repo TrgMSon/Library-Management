@@ -36,6 +36,7 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-warning { background: var(--warning); color: white; }
         .btn-secondary { background: #E5E7EB; color: #374151; }
+        #btn-goBack {background-color: #6B7280; color: white;}
 
         .form-group { margin-bottom: 1rem; }
         label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
@@ -85,7 +86,7 @@
                 <div class="form-group" style="flex: 1; min-width: 200px;">
                     <label>Vai trò</label>
                     <select id="addRole" required>
-                        <option value="user">Người dùng</option>
+                        <option value="user">Nhân viên</option>
                         <option value="admin">Quản trị viên</option>
                     </select>
                 </div>
@@ -114,7 +115,7 @@
                 <td th:text="${user.email}"></td>
                 <td>
                         <span th:class="${user.role == 'admin'} ? 'role-badge role-admin' : 'role-badge role-user'"
-                              th:text="${user.role == 'admin' ? 'Quản trị viên' : 'Người dùng'}"></span>
+                              th:text="${user.role == 'admin' ? 'Quản trị viên' : 'Nhân viên'}"></span>
                 </td>
                 <td>
                     <button class="btn-warning" th:attr="onclick=|openEditModal(${user.userId})|">Sửa</button>
@@ -124,6 +125,8 @@
             </tbody>
         </table>
     </div>
+
+    <button id="btn-goBack" type="button">Quay lại</button>
 </div>
 
 <div id="editModal" class="modal-overlay">
@@ -142,7 +145,7 @@
             <div class="form-group">
                 <label>Vai trò</label>
                 <select id="editRole" required>
-                    <option value="user">Người dùng</option>
+                    <option value="user">Nhân viên</option>
                     <option value="admin">Quản trị viên</option>
                 </select>
             </div>
@@ -168,6 +171,10 @@
 <script>
     const API_BASE = '/api/user';
     let targetUserId = null;
+
+    document.getElementById("btn-goBack").addEventListener("click", function () {
+        window.history.back();
+    });
 
     // --- THÊM Người DÙNG ---
     document.getElementById('addUserForm').addEventListener('submit', function(e) {

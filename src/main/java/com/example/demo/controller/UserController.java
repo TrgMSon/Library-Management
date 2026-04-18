@@ -1,11 +1,15 @@
 package com.example.demo.controller;
 
+
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.UserService;
+
 import jakarta.servlet.http.HttpSession;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +19,16 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/manage_user")
     public String openUserManagePage(HttpSession session, Model model) {
-        User currUser = (User) session.getAttribute("loggedInUser");
+        String userId = (String) session.getAttribute("userId");
+        User currUser = userService.findUserById(Integer.parseInt(userId));
         if (currUser == null) {
             return "redirect:/login";
         }

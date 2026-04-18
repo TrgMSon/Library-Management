@@ -1,12 +1,11 @@
 package com.example.demo.controller;
+
 import com.example.demo.dto.UserDTO;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepo;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,8 @@ public class UserRestController {
 
     @PostMapping("/add_user")
     public ResponseEntity<String> addUser(HttpSession session, @RequestBody UserDTO userDTO) {
-        User currUser = (User) session.getAttribute("loggedInUser");
+        String userId = (String) session.getAttribute("userId");
+        User currUser = userService.findUserById(Integer.parseInt(userId));
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
@@ -47,7 +47,8 @@ public class UserRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(HttpSession session, @PathVariable int id) {
-        User currUser = (User) session.getAttribute("loggedInUser");
+        String userId = (String) session.getAttribute("userId");
+        User currUser = userService.findUserById(Integer.parseInt(userId));
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -67,7 +68,8 @@ public class UserRestController {
 
     @PostMapping("/update_user")
     public ResponseEntity<String> processUpdatingUser(HttpSession session, @RequestBody User updatedUser) {
-        User currUser = (User) session.getAttribute("loggedInUser");
+        String userId = (String) session.getAttribute("userId");
+        User currUser = userService.findUserById(Integer.parseInt(userId));
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
@@ -91,7 +93,8 @@ public class UserRestController {
 
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteUser(HttpSession session, @PathVariable("id") int id) {
-        User currUser = (User) session.getAttribute("loggedInUser");
+        String userId = (String) session.getAttribute("userId");
+        User currUser = userService.findUserById(Integer.parseInt(userId));
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }

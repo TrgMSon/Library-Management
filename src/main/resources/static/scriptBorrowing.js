@@ -7,7 +7,6 @@ const readerElement = document.getElementById("readerElement");
 const createdElement = document.getElementById("createdElement");
 const listBorrowBook = document.querySelector(".listBorrowBook");
 const noteContent = document.getElementById("noteContent");
-const totalAmountInput = document.getElementById("totalAmountInput");
 const goBackBtn = document.getElementById("goBack");
 const acptEditCard = document.getElementById("acpt");
 const cancelCreateCard = document.getElementById("cancelCreateCard");
@@ -286,7 +285,7 @@ async function loadDetailCard(row) {
     cardIdElement.innerText = "ID: " + cardDetail.borrowCardId;
     userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
     readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
-    createdElement.innerText = "Ngày tạo: " + cardDetail.createdAt;
+    createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.createdAt);
 
     let books = cardDetail.books;
     for (let i = 0; i < books.length; i++) {
@@ -294,12 +293,18 @@ async function loadDetailCard(row) {
     }
 }
 
-goBackBtn.addEventListener("click", function () {
-    cardDiv.style.display = "none";
-    mainView.style.display = "flex";
-});
+// goBackBtn.addEventListener("click", function () {
+//     resetCreateCard();
+//     console.log("hello");
+//     cardDiv.style.display = "none";
+//     mainView.style.display = "flex";
+// });
 
 cancelCreateCard.addEventListener("click", function () {
+    resetCreateCard();
+    console.log("hello");
+    cardDiv.style.display = "none";
+    mainView.style.display = "flex";
     createCardDiv.style.display = "none";
     mainView.style.display = "flex";
 });
@@ -385,15 +390,24 @@ acptCreateCard.addEventListener("click", async function () {
 
     let isError = false;
     let rowBooks = document.querySelectorAll(".rowBook");
-    rowBooks.forEach(book => {
-        if ((book.cells)[0].innerText.trim() === "" || (book.cells)[1].innerText.trim() === "" || (book.cells)[2].querySelector("input").value === "") {
+    for (book of rowBooks) {
+        if ((book.cells)[0].innerText.trim() === "" && (book.cells)[1].innerText.trim() === "" && (book.cells)[2].querySelector("input").value === "") {
+            book.remove();
+            continue;
+        }
+
+        if ((book.cells)[2].querySelector("input").value === "") {
             alert("Vui lòng nhập đủ thông tin sách mượn");
             isError = true;
             return;
         }
 
-        if ((book.cells)[0].innerText.trim() === "" && (book.cells)[1].innerText.trim() === "" && (book.cells)[2].querySelector("input").value === "") book.remove();
-    });
+        if ((book.cells)[0].innerText.trim() === "" || (book.cells)[1].innerText.trim() === "") {
+            alert("Vui lòng nhập đủ thông tin sách mượn");
+            isError = true;
+            return;
+        }
+    }
     if (isError) return;
 
     rowBooks = document.querySelectorAll(".rowBook");
@@ -463,5 +477,8 @@ function resetCreateCard() {
     searchBookInput.value = "";
 
     let borrowBooks = document.querySelectorAll(".rowBook");
-    borrowBooks.forEach(book => book.remove());
+    if (borrowBooks != null) borrowBooks.forEach(book => book.remove());
+
+    let oldResult = document.querySelectorAll(".rowBookSearch");
+    if (oldResult != null) oldResult.forEach(book => book.remove());
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.BorrowCard;
 import com.example.demo.model.BorrowCardDetail;
+import com.example.demo.model.Reader;
+import com.example.demo.model.User;
 
 @Repository
 public interface BorrowCardRepo extends JpaRepository<BorrowCard, Integer> {

@@ -1,34 +1,38 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ReaderDTO;
-import com.example.demo.model.Reader;
-import com.example.demo.model.User;
-import com.example.demo.repository.ReaderRepo;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.CreateCardDTO;
 import com.example.demo.dto.CreateCardDetailInput;
+import com.example.demo.dto.ReaderDTO;
+import com.example.demo.model.Reader;
+import com.example.demo.repository.ReaderRepo;
 import com.example.demo.service.ReaderService;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/reader")
-@RequiredArgsConstructor
 public class ReaderRestController {
-    private final ReaderService readerService;
-    private final ReaderRepo readerRepo;
+    @Autowired
+    private ReaderService readerService;
 
+    @Autowired
+    private ReaderRepo readerRepo;
+    
     @GetMapping("/checkReaderInfor")
     public boolean checkReaderInfor(@RequestParam int readerId) {
         return readerService.getReaderInfor(readerId) != null;
@@ -51,8 +55,8 @@ public class ReaderRestController {
 
     @PostMapping("/add_reader")
     public ResponseEntity<String> processAddingReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
-        User currUser = (User) session.getAttribute("loggedInUser");
-        if (currUser == null) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
@@ -71,8 +75,8 @@ public class ReaderRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Reader> getReader(HttpSession session, @PathVariable int id) {
-        User currentUser = (User) session.getAttribute("loggedInUser");
-        if (currentUser == null) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.noContent().build();
         }
 
@@ -87,8 +91,8 @@ public class ReaderRestController {
 
     @PostMapping("/update_reader")
     public ResponseEntity<String> updateReader(HttpSession session, @RequestBody Reader updatedReader) {
-        User currUser = (User) session.getAttribute("loggedInUser");
-        if (currUser == null) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
@@ -102,13 +106,13 @@ public class ReaderRestController {
 
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteReader(HttpSession session, @PathVariable("id") int id, RedirectAttributes redirectAttributes) {
-        User currUser = (User) session.getAttribute("loggedInUser");
-        if (currUser == null) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
-        readerService.deleteReader(id);
-        return ResponseEntity.ok().body("Xoá người dùng thành công!");
+        if (readerService.deleteReader(id)) return ResponseEntity.ok().body("Xoá độc giả thành công!");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Độc giả đang có phiếu mượn, không thể xóa"); 
     }
-
+    
 }

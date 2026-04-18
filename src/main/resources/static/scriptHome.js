@@ -23,6 +23,7 @@ inforDiv.style.display = "none";
 if (userLabel.dataset.role === "user") {
     manageEmployee.style.display = "none";
     overView.style.display = "none";
+    addBookBtn.style.display = "none";
 }
 
 cardDiv.style.display = "none";
