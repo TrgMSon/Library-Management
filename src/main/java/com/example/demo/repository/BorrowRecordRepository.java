@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Long> {
+public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Integer> {
     
     // Thống kê sách mượn nhiều theo khoảng thời gian
     @Query("SELECT br.book.bookId, br.book.name, br.book.author, COUNT(br.id) as borrowCount " +

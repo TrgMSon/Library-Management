@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.BookStatisticsDTO;
 import com.example.demo.dto.ReaderStatisticsDTO;
-import com.example.demo.repository.BorrowRecordRepository;
+import com.example.demo.repository.BorrowCardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 public class StatisticsService {
     
     @Autowired
-    private BorrowRecordRepository borrowRecordRepository;
+    private BorrowCardRepo borrowCardRepo;
     
     // Thống kê sách mượn nhiều
     public List<BookStatisticsDTO> getMostBorrowedBooks(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Object[]> results = borrowRecordRepository.findMostBorrowedBooks(startDate, endDate);
+        List<Object[]> results = borrowCardRepo.findMostBorrowedBooks(startDate, endDate);
         
         return results.stream()
                 .map(row -> new BookStatisticsDTO(
@@ -31,7 +31,7 @@ public class StatisticsService {
     
     // Thống kê độc giả mượn nhiều
     public List<ReaderStatisticsDTO> getMostActiveReaders(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Object[]> results = borrowRecordRepository.findMostActiveReaders(startDate, endDate);
+        List<Object[]> results = borrowCardRepo.findMostActiveReaders(startDate, endDate);
         
         return results.stream()
                 .map(row -> new ReaderStatisticsDTO(
@@ -45,7 +45,7 @@ public class StatisticsService {
     
     // Kiểm tra có dữ liệu không
     public boolean hasDataInDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return borrowRecordRepository.countByBorrowDateBetween(startDate, endDate) > 0;
+        return borrowCardRepo.countByBorrowDateBetween(startDate, endDate) > 0;
     }
     
     // Validate thời gian
