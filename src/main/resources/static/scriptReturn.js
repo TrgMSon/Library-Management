@@ -4,58 +4,12 @@
 
 let pendingReturns = {};
 const FINE_PER_DAY = 2000;
-let currentCardId = null;
-// const cardIdElement = document.getElementById("cardIdElement");
-// const userElement = document.getElementById("userElement");
-// const readerElement = document.getElementById("readerElement");
-// const createdElement = document.getElementById("createdElement");
-// const listBorrowBook = document.querySelector(".listBorrowBook tbody");
 const totalAmountElement = document.getElementById("totalAmount");
-// const goBackBtn = document.getElementById("goBack");
 
 function formateDate(date) {
     let tmp = date.split("T");
     let tmp2 = tmp[0].split("-");
     return `${tmp2[2]}/${tmp2[1]}/${tmp2[0]} ${tmp[1]}`;
-}
-
-function addBorrowBook(book) {
-    let row = document.createElement("tr");
-    row.classList.add("rowBook");
-
-    let bookIdElement = document.createElement("td");
-    bookIdElement.innerText = book.bookId;
-
-    let bookNameElement = document.createElement("td");
-    bookNameElement.innerText = book.bookName;
-
-    let expireElement = document.createElement("td");
-    expireElement.innerText = formateDate(book.expire);
-
-    let returnDateElement = document.createElement("td");
-    returnDateElement.innerText = book.returnDate || "";
-
-    let statusElement = document.createElement("td");
-    if (book.status === "borrowing") statusElement.innerText = "Chưa trả";
-    else statusElement.innerText = "Đã trả";
-
-    let actionElement = document.createElement("td");
-    if (book.status === "borrowing") {
-        let returnBtn = document.createElement("button");
-        returnBtn.type = "button";
-        returnBtn.classList.add("returnBtn");
-        returnBtn.innerText = "Trả";
-        actionElement.appendChild(returnBtn);
-    }
-
-    row.appendChild(bookIdElement);
-    row.appendChild(bookNameElement);
-    row.appendChild(expireElement);
-    row.appendChild(returnDateElement);
-    row.appendChild(statusElement);
-    row.appendChild(actionElement);
-
-    listBorrowBook.appendChild(row);
 }
 
 async function loadDetailCardForReturn(cardId) {
@@ -161,8 +115,7 @@ function updateTotalFine() {
 function handleReturnBook(button) {
     const row = button.closest("tr");
     const bookId = row.cells[0].innerText.trim();
-    const bookName = row.cells[1].innerText.trim();
-    const expireDate = row.cells[2].innerText.trim();
+    const expireDate = row.cells[1].innerText.trim();
 
     const borrowCardId = currentCardId;
     const fine = calculateFine(expireDate);
@@ -181,7 +134,6 @@ function handleReturnBook(button) {
     pendingReturns[returnKey] = {
         borrowCardId: parseInt(borrowCardId),
         bookId: parseInt(bookId),
-        bookName: bookName,
         fine: fine,
         row: row,
         button: button,
@@ -255,12 +207,12 @@ async function confirmAllReturns() {
                 totalFineConfirmed += item.fine;
                 delete pendingReturns[returnKey];
             } else {
-                alert("Lỗi trả sách " + item.bookName + ": " + result.message);
+                alert("Lỗi trả sách " + item.bookId + ": " + result.message);
             }
         }
 
         alert("Xác nhận trả sách hoàn tất!");
-        await loadDetailCardForReturn(currentCardId);
+        loadDetailCardForReturn(currentCardId);
 
     } catch (error) {
         console.error("Lỗi:", error);
