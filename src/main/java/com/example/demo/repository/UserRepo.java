@@ -9,6 +9,8 @@ import com.example.demo.model.User;
 
 import jakarta.transaction.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
     @Query(value = """
@@ -20,4 +22,6 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     @Modifying
     @Query(value = "INSERT INTO user(email, name, password, role) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
     void save(String email, String name, String password, String role);
+
+    Optional<User> findByEmail(String email);
 }

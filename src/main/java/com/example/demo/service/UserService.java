@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.BorrowCard;
@@ -34,18 +36,29 @@ public class UserService {
         userRepo.save(user.getEmail(), user.getName(), user.getPassword(), "user");
     }
 
-    public void deleteUser(int id) {
-        User user = userRepo.findById(id).orElse(null);
-        if (user != null) {
-            List<BorrowCard> borrowCards = borrowCardRepo.findByUser(user);
-            if (borrowCards != null) {
-                for (BorrowCard borrowCard : borrowCards) {
-                    borrowCard.setUser(null);
-                }
-
-                borrowCardRepo.saveAll(borrowCards);
-                userRepo.delete(user);
-            }
+    public ResponseEntity<?> deleteUser(int id, int userId) {
+        User currUser = findUserById(userId);
+        if (currUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
+
+        if (currUser.getRole() != null && currUser.getRole().equals("user")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
+        }
+
+        if (userId == id) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Không thể xoá người dùng hiện tại đang đăng nhập!");
+        }
+
+        User user = userRepo.findById(id).orElse(null);
+        assert user != null;
+
+        List<BorrowCard> borrowCards = borrowCardRepo.findByUser(user);
+        if (borrowCards.isEmpty()) {
+            userRepo.delete(user);
+            return ResponseEntity.ok().body("Xoá người dùng thành công!");
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không thể xoá, người dùng đang cho độc giả mượn sách");
     }
 }

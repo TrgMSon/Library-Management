@@ -30,9 +30,14 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
         }
 
-        String name = userDTO.getName();
-        String email = userDTO.getEmail();
-        String password = userDTO.getPassword();
+        String name = userDTO.getName().trim();
+        String email = userDTO.getEmail().trim();
+
+        if (userRepo.findByEmail(email).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
+        }
+
+        String password = userDTO.getPassword().trim();
         String role = userDTO.getRole();
 
         User user = new User();
@@ -92,20 +97,9 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}/delete")
-    public ResponseEntity<String> deleteUser(HttpSession session, @PathVariable("id") int id) {
+    public ResponseEntity<?> deleteUser(HttpSession session, @PathVariable("id") int id) {
         String userId = (String) session.getAttribute("userId");
-        User currUser = userService.findUserById(Integer.parseInt(userId));
-        if (currUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
-        }
-
-        if (currUser.getRole() != null && currUser.getRole().equals("user")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
-        }
-
-
-        userService.deleteUser(id);
-        return ResponseEntity.ok().body("Xoá người dùng thành công!");
+        return userService.deleteUser(id, Integer.parseInt(userId));
     }
 
 }
