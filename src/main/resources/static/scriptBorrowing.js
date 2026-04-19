@@ -18,6 +18,8 @@ const searchBookForm = document.getElementById("searchBookForm");
 const searchBookInput = document.getElementById("searchBookInput");
 const readerIdInput = document.getElementById("readerIdInput");
 
+let currentCardId = null;
+
 function formateDate(date) {
     let tmp = date.split("T");
     let tmp2 = tmp[0].split("-");
@@ -244,6 +246,7 @@ manageBorrowCardBtn.addEventListener("click", async function () {
     mainView.appendChild(listCard);
 });
 
+
 function addBorrowBook(book) {
     let row = document.createElement("tr");
     row.classList.add("rowBook");
@@ -258,16 +261,21 @@ function addBorrowBook(book) {
     expireElement.innerText = formateDate(book.expire);
 
     let returnDateElement = document.createElement("td");
-    returnDateElement.innerText = book.returnDate;
+    if (book.returnDate != null) returnDateElement.innerText = formateDate(book.returnDate);
+    else returnDateElement.innerText = book.returnDate || "";
 
     let statusElement = document.createElement("td");
     if (book.status === "borrowing") statusElement.innerText = "Chưa trả";
     else statusElement.innerText = "Đã trả";
 
     let actionElement = document.createElement("td");
-    actionElement.classList.add("actionReturn");
-    if (book.status === "borrowing") actionElement.innerText = "Trả";
-    else actionElement.innerText = "";
+    if (book.status === "borrowing") {
+        let returnBtn = document.createElement("button");
+        returnBtn.type = "button";
+        returnBtn.classList.add("returnBtn");
+        returnBtn.innerText = "Trả";
+        actionElement.appendChild(returnBtn);
+    }
 
     row.appendChild(bookIdElement);
     row.appendChild(bookNameElement);
@@ -280,6 +288,8 @@ function addBorrowBook(book) {
 }
 
 async function loadDetailCard(row) {
+    currentCardId = row.dataset.borrowCardId;
+
     let cardDetail = await fetch("/api/borrowCard/getDetailCard?cardId=" + row.dataset.borrowCardId).then(res => res.json());
 
     cardIdElement.innerText = "ID: " + cardDetail.borrowCardId;
@@ -292,13 +302,6 @@ async function loadDetailCard(row) {
         addBorrowBook(books[i]);
     }
 }
-
-// goBackBtn.addEventListener("click", function () {
-//     resetCreateCard();
-//     console.log("hello");
-//     cardDiv.style.display = "none";
-//     mainView.style.display = "flex";
-// });
 
 cancelCreateCard.addEventListener("click", function () {
     resetCreateCard();
@@ -316,16 +319,12 @@ function addRow() {
     let bookIdElement = document.createElement("td");
     bookIdElement.contentEditable = true;
 
-    let bookNameElement = document.createElement("td");
-    bookNameElement.contentEditable = true;
-
     let expireElement = document.createElement("td");
     let expireInput = document.createElement("input");
     expireInput.type = "date";
     expireElement.appendChild(expireInput);
 
     row.appendChild(bookIdElement);
-    row.appendChild(bookNameElement);
     row.appendChild(expireElement);
 
     bookInCreateCard.appendChild(row);
@@ -391,18 +390,18 @@ acptCreateCard.addEventListener("click", async function () {
     let isError = false;
     let rowBooks = document.querySelectorAll(".rowBook");
     for (book of rowBooks) {
-        if ((book.cells)[0].innerText.trim() === "" && (book.cells)[1].innerText.trim() === "" && (book.cells)[2].querySelector("input").value === "") {
+        if ((book.cells)[0].innerText.trim() === "" && (book.cells)[1].querySelector("input").value === "") {
             book.remove();
             continue;
         }
 
-        if ((book.cells)[2].querySelector("input").value === "") {
+        if ((book.cells)[1].querySelector("input").value === "") {
             alert("Vui lòng nhập đủ thông tin sách mượn");
             isError = true;
             return;
         }
 
-        if ((book.cells)[0].innerText.trim() === "" || (book.cells)[1].innerText.trim() === "") {
+        if ((book.cells)[0].innerText.trim() === "") {
             alert("Vui lòng nhập đủ thông tin sách mượn");
             isError = true;
             return;
@@ -447,7 +446,7 @@ acptCreateCard.addEventListener("click", async function () {
         borrowBooks.push({
             borrowCardId: borrowCardId,
             bookId: (rowBooks[i].cells)[0].innerText,
-            expire: (rowBooks[i].cells)[2].querySelector("input").value
+            expire: (rowBooks[i].cells)[1].querySelector("input").value
         });
     }
 

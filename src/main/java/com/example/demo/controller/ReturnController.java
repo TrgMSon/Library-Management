@@ -22,11 +22,6 @@ public class ReturnController {
     @Autowired
     private ReturnService returnService;
     
-    /**
-     * Xử lý trả sách
-     * @param returnBookDTO - Chứa borrowCardId, bookId, returnDate
-     * @return ResponseEntity với success status
-     */
     @PostMapping("/returnBook")
     public ResponseEntity<Map<String, Object>> returnBook(@RequestBody ReturnBookDTO returnBookDTO) {
         Map<String, Object> response = new HashMap<>();

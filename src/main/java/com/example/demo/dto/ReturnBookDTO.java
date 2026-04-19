@@ -8,5 +8,4 @@ public class ReturnBookDTO {
     private Integer bookId;
     private String returnDate;
     private Long fine;
-    
 }
