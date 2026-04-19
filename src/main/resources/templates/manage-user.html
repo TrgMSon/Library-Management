@@ -246,7 +246,7 @@
             </table>
         </div>
 
-        <button id="btn-goBack" type="button">Quay lại</button>
+        <button id="btn-goBack" type="button" th:data-user-login-id="${userLoginId}">Quay lại</button>
     </div>
 
     <div id="editModal" class="modal-overlay">
@@ -291,9 +291,21 @@
     <script>
         const API_BASE = '/api/user';
         let targetUserId = null;
+        let userLoginId = document.getElementById("btn-goBack").dataset.userLoginId;
 
         document.getElementById("btn-goBack").addEventListener("click", function () {
             window.history.back();
+        });
+
+        let tableRows = document.querySelectorAll('#userTable tbody tr');
+
+        tableRows.forEach(row => {
+            if (row.cells[0].innerText === userLoginId) {
+                row.cells[1].innerText += " (Bạn)";
+                row.cells[1].style.fontWeight = "bold";
+                row.cells[4].querySelector(".btn-danger").style.display = "none";
+                return;
+            }
         });
 
         // --- TÌM KIẾM NGƯỜI DÙNG ---

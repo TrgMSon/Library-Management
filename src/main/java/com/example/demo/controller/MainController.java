@@ -51,25 +51,6 @@ public class MainController {
         }
     }
 
-    @GetMapping("/signup")
-    public String showSignup() {
-        return "signup";
-    }
-
-    @PostMapping("/signup")
-    public String doSignup(@ModelAttribute User user, RedirectAttributes ra) {
-        User tmp = userService.findUserByEmail(user.getEmail(), user.getPassword());
-        if (tmp == null) {
-            ra.addFlashAttribute("message", "Đăng ký thành công");
-            userService.saveUser(user);
-            return "redirect:/login";
-        }
-        else {
-            ra.addFlashAttribute("error", "Tài khoản đã tồn tại");
-            return "redirect:/signup";
-        }
-    }
-
     @GetMapping("/home")
     public String showHome(Model model, HttpSession session) {
         String userId = (String) session.getAttribute("userId");

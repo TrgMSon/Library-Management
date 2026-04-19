@@ -38,21 +38,6 @@ public class UserService {
         userRepo.save(user.getEmail(), user.getName(), user.getPassword(), "user");
     }
 
-    // public void deleteUser(int id) {
-    // User user = userRepo.findById(id).orElse(null);
-    // if (user != null) {
-    // List<BorrowCard> borrowCards = borrowCardRepo.findByUser(user);
-    // if (borrowCards != null) {
-    // for (BorrowCard borrowCard : borrowCards) {
-    // borrowCard.setUser(null);
-    // }
-
-    // borrowCardRepo.saveAll(borrowCards);
-    // userRepo.delete(user);
-    // }
-    // }
-    // }
-
     public ResponseEntity<?> deleteUser(int id, int userId) {
         User currUser = findUserById(userId);
         if (currUser == null) {

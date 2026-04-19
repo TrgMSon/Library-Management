@@ -17,6 +17,7 @@ const bookSearch = document.querySelector(".bookSearch");
 const searchBookForm = document.getElementById("searchBookForm");
 const searchBookInput = document.getElementById("searchBookInput");
 const readerIdInput = document.getElementById("readerIdInput");
+const totalAmountElement = document.getElementById("totalAmount");
 
 let currentCardId = null;
 
@@ -24,6 +25,17 @@ function formateDate(date) {
     let tmp = date.split("T");
     let tmp2 = tmp[0].split("-");
     return `${tmp2[2]}/${tmp2[1]}/${tmp2[0]} ${tmp[1]}`;
+}
+
+function formatTotal(total) {
+    let ans = "";
+    let arr = total.split('');
+    arr.reverse();
+    for (let i = 0; i < arr.length; i++) {
+        ans = arr[i] + ans;
+        if ((i + 1) % 3 === 0 && i > 0 && (i + 1) < arr.length) ans = '.' + ans;
+    }
+    return ans;
 }
 
 function initListCard() {
@@ -301,11 +313,12 @@ async function loadDetailCard(row) {
     for (let i = 0; i < books.length; i++) {
         addBorrowBook(books[i]);
     }
+
+    totalAmountElement.innerText = formatTotal(cardDetail.totalAmount + "") + " đồng";
 }
 
 cancelCreateCard.addEventListener("click", function () {
     resetCreateCard();
-    console.log("hello");
     cardDiv.style.display = "none";
     mainView.style.display = "flex";
     createCardDiv.style.display = "none";
