@@ -162,7 +162,7 @@
             <h2>Quản lý Độc giả</h2>
         </div>
 
-        <div class="card">
+        <div class="card" id="addReaderDiv">
             <h3>Thêm Độc giả Mới</h3>
             <form id="addReaderForm">
                 <div style="display: flex; gap: 1rem;">
@@ -268,6 +268,9 @@
 
             let delBtns = document.querySelectorAll(".btn-danger");
             delBtns.forEach(btn => btn.style.display = "none");
+        }
+        else {
+            document.getElementById("addReaderDiv").style.display = "none";
         }
 
         document.getElementById("btn-goBack").addEventListener("click", function () {
