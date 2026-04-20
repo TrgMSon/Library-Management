@@ -22,14 +22,16 @@ public class UserService {
     private BorrowCardRepo borrowCardRepo;
 
     public User findUserByEmail(String email, String password) {
-        User result = userRepo.findByEmail(email, password);
+        User result = userRepo.findByEmailAndPassword(email, password);
         return result;
     }
 
     public User findUserById(int userId) {
         Optional<User> optional = userRepo.findById(userId);
-        if (optional.isEmpty()) return null;
-        else return optional.get();
+        if (optional.isEmpty())
+            return null;
+        else
+            return optional.get();
     }
 
     public void saveUser(User user) {
@@ -47,7 +49,8 @@ public class UserService {
         }
 
         if (userId == id) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Không thể xoá người dùng hiện tại đang đăng nhập!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Không thể xoá người dùng hiện tại đang đăng nhập!");
         }
 
         User user = userRepo.findById(id).orElse(null);
@@ -59,6 +62,7 @@ public class UserService {
             return ResponseEntity.ok().body("Xoá người dùng thành công!");
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không thể xoá, người dùng đang cho độc giả mượn sách");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Không thể xoá, người dùng đang cho độc giả mượn sách");
     }
 }

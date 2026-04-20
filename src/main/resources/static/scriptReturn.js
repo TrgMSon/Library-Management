@@ -1,6 +1,5 @@
 let pendingReturns = {};
 const FINE_PER_DAY = 2000;
-const totalAmountElement = document.getElementById("totalAmount");
 
 function formateDate(date) {
     let tmp = date.split("T");
@@ -20,7 +19,7 @@ async function loadDetailCardForReturn(cardId) {
     userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
     readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
     createdElement.innerText = "Ngày tạo: " + cardDetail.createdAt;
-    totalAmountElement.innerText = cardDetail.totalAmount + ' đồng';
+    totalAmountElement.innerText = formatTotal(cardDetail.totalAmount + "") + " đồng";
 
     let books = cardDetail.books;
     for (let i = 0; i < books.length; i++) {

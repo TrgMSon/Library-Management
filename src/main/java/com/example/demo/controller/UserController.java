@@ -44,6 +44,7 @@ public class UserController {
         }
 
         model.addAttribute("user_list", userList);
+        model.addAttribute("userLoginId", userId);
         return "manage-user";
     }
 
