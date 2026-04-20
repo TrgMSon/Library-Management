@@ -218,7 +218,7 @@ manageBorrowCardBtn.addEventListener("click", async function () {
         mainView.style.display = "none";
         createCardDiv.style.display = "flex";
     });
-    mainView.appendChild(createCardBtn);
+    if (userLabel.dataset.role === "user") mainView.appendChild(createCardBtn);
 
     let buttonDiv = initOptionCard();
     mainView.appendChild(buttonDiv);
@@ -281,7 +281,7 @@ function addBorrowBook(book) {
     else statusElement.innerText = "Đã trả";
 
     let actionElement = document.createElement("td");
-    if (book.status === "borrowing") {
+    if (book.status === "borrowing" && userLabel.dataset.role === "user") {
         let returnBtn = document.createElement("button");
         returnBtn.type = "button";
         returnBtn.classList.add("returnBtn");
