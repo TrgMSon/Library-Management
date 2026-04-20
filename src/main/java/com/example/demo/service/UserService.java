@@ -48,11 +48,6 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
         }
 
-        if (userId == id) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Không thể xoá người dùng hiện tại đang đăng nhập!");
-        }
-
         User user = userRepo.findById(id).orElse(null);
         assert user != null;
 

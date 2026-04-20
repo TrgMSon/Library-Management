@@ -28,6 +28,10 @@ public class UserController {
     @GetMapping("/manage_user")
     public String openUserManagePage(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
         User currUser = userService.findUserById(Integer.parseInt(userId));
         if (currUser == null) {
             return "redirect:/login";

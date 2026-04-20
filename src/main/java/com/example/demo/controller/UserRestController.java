@@ -86,6 +86,10 @@ public class UserRestController {
             return ResponseEntity.notFound().build();
         }
 
+        if (userRepo.findByEmail(updatedUser.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
+        }
+
         employee.setEmail(updatedUser.getEmail());
         employee.setRole(updatedUser.getRole());
         employee.setName(updatedUser.getName());
