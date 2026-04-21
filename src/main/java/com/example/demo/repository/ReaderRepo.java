@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -43,4 +44,6 @@ public interface ReaderRepo extends JpaRepository<Reader, Integer> {
     @Modifying
     @Query(value = "UPDATE book SET quantity = quantity + ?1 WHERE book_id = ?2", nativeQuery = true)
     int increaseQtyBook(int quantityReturn, int bookId);
+
+    Optional<Reader> findByEmail(String email);
 }
