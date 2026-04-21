@@ -35,6 +35,7 @@ public class UserRestController {
         if (userRepo.findByEmail(email).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
         }
+
         String password = userDTO.getPassword();
         String role = userDTO.getRole();
 
