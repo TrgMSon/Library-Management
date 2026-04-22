@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -33,6 +36,11 @@ public class BorrowCardController {
     @GetMapping("/searchCard")
     public ArrayList<BorrowCardDTO> getMethodName(@RequestParam String target, @RequestParam String option) {
         return borrowCardService.searchCard(target, option);
+    }
+    
+    @PostMapping("/deleteCard")
+    public void deleteCard(@RequestBody Integer cardId) {
+        borrowCardService.deleteCard(cardId);
     }
     
 }

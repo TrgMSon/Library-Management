@@ -72,4 +72,8 @@ public class BorrowCardService {
         }
         return borrowCardDTOs;
     }
+
+    public void deleteCard(int cardId) {
+        borrowCardRepo.deleteById(cardId);
+    }
 }

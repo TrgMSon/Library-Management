@@ -389,7 +389,7 @@ searchBookForm.addEventListener("submit", async function (e) {
 function markItem(bookIds) {
     let rowBooks = document.querySelectorAll(".rowBook");
     rowBooks.forEach(book => {
-        if (bookIds.includes((book.cells)[0].innerText)) book.style.backgroundColor = "#A9A9A9";
+        if (bookIds.includes((book.cells)[0].innerText) || bookIds.includes("invalidBook-" + (book.cells)[0].innerText)) book.style.backgroundColor = "#A9A9A9";
     });
 }
 
@@ -474,8 +474,23 @@ acptCreateCard.addEventListener("click", async function () {
     }).then(res => res.json());
 
     if (response.length > 0) {
-        markItem(response);
-        alert("Số lượng đầu sách trong kho không đủ");
+        if (response.includes("invalidBook")) {
+            markItem(response);
+            alert("Thông tin đầu sách không tồn tại, vui lòng thử lại");
+        }
+        else {
+            markItem(response);
+            alert("Số lượng đầu sách trong kho không đủ");
+        }
+
+        await fetch("/api/borrowCard/deleteCard", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(borrowCardId)
+        });
+
         return;
     }
 

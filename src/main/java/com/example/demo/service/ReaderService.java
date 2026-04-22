@@ -12,6 +12,7 @@ import com.example.demo.dto.CreateCardDTO;
 import com.example.demo.dto.CreateDetailCardDTO;
 import com.example.demo.model.BorrowCard;
 import com.example.demo.model.Reader;
+import com.example.demo.repository.BookRepo;
 import com.example.demo.repository.BorrowCardRepo;
 import com.example.demo.repository.ReaderRepo;
 
@@ -23,10 +24,14 @@ public class ReaderService {
     @Autowired
     private BorrowCardRepo borrowCardRepo;
 
+    @Autowired
+    private BookRepo bookRepo;
+
     public Reader getReaderInfor(int readerId) {
         Optional<Reader> reader = readerRepo.findById(readerId);
-        if (reader.isEmpty()) return null;
-        return reader.get();   
+        if (reader.isEmpty())
+            return null;
+        return reader.get();
     }
 
     public int checkBorrowingBook(int readerId) {
@@ -34,21 +39,38 @@ public class ReaderService {
     }
 
     public String createCard(CreateCardDTO card) {
-        readerRepo.createCard(card.getUserId(), card.getReaderId(), card.getTotalAmount(), card.getNote(), LocalDateTime.now());
+        readerRepo.createCard(card.getUserId(), card.getReaderId(), card.getTotalAmount(), card.getNote(),
+                LocalDateTime.now());
         return readerRepo.getCardCreatedId(card.getReaderId());
+    }
+
+    public boolean isInStock(int bookId, int cartQty) {
+        return cartQty <= bookRepo.findQty(bookId);
     }
 
     public ArrayList<String> addDetailCard(ArrayList<CreateDetailCardDTO> cardDetails) {
         ArrayList<String> bookIds = new ArrayList<>();
 
         for (CreateDetailCardDTO cardDetail : cardDetails) {
-            String expire = cardDetail.getExpire() + "T22:00:00";
-            LocalDateTime expireDate = LocalDateTime.parse(expire);
-            if (readerRepo.decreaseQtyBook(1, cardDetail.getBookId()) > 0) {
-                readerRepo.addDetailCard(cardDetail.getBorrowCardId(), cardDetail.getBookId(), expireDate, "borrowing");
+            if (bookRepo.findQty(cardDetail.getBookId()) == null) {
+                bookIds.add("invalidBook");
+                bookIds.add("invalidBook-" + cardDetail.getBookId());
+                continue;
             }
-            else bookIds.add(cardDetail.getBookId() + "");
+            if (!isInStock(cardDetail.getBookId(), 1)) {
+                bookIds.add(cardDetail.getBookId() + "");
+            }
         }
+
+        if (bookIds.size() == 0) {
+            for (CreateDetailCardDTO cardDetail : cardDetails) {
+                String expire = cardDetail.getExpire() + "T22:00:00";
+                LocalDateTime expireDate = LocalDateTime.parse(expire);
+                readerRepo.addDetailCard(cardDetail.getBorrowCardId(), cardDetail.getBookId(), expireDate, "borrowing");
+                readerRepo.decreaseQtyBook(1, cardDetail.getBookId());
+            }
+        }
+
         return bookIds;
     }
 
@@ -56,7 +78,8 @@ public class ReaderService {
         Reader reader = readerRepo.findById(id).orElse(null);
         if (reader != null) {
             List<BorrowCard> borrowCardList = borrowCardRepo.findByReader(reader);
-            if (borrowCardList != null) return false;
+            if (borrowCardList != null)
+                return false;
             else {
                 readerRepo.delete(reader);
                 return true;

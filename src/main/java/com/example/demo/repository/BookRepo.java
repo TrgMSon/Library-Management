@@ -29,6 +29,9 @@ public interface BookRepo extends JpaRepository<Book, Integer> {
     @Query(value = "SELECT COUNT(*) FROM borrow_card_detail WHERE book_id = ?1", nativeQuery = true)
     Integer checkBookInCard(int bookId);
 
+    @Query(value = "SELECT quantity FROM book WHERE book_id = ?1", nativeQuery = true)
+    Integer findQty(int book_id);
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE book SET quantity = ?1, name = ?2, description = ?3, author = ?4, publish = ?5, type = ?6, url_img = ?7 WHERE book_id = ?8", nativeQuery = true)
