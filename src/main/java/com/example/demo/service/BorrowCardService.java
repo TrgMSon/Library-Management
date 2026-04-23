@@ -16,7 +16,6 @@ import com.example.demo.model.BorrowCard;
 import com.example.demo.model.BorrowCardDetail;
 import com.example.demo.repository.BookRepo;
 import com.example.demo.repository.BorrowCardRepo;
-import com.example.demo.repository.ReaderRepo;
 
 @Service
 public class BorrowCardService {
@@ -28,9 +27,6 @@ public class BorrowCardService {
 
     @Autowired
     private BookService bookService;
-
-    @Autowired
-    private ReaderRepo readerRepo;
 
     public ArrayList<BorrowCardDTO> getAllBorrowCard() {
         ArrayList<BorrowCard> borrowCards = borrowCardRepo.findAllBorrowCards();
@@ -92,9 +88,9 @@ public class BorrowCardService {
     }
 
     public String createCard(CreateCardDTO card) {
-        readerRepo.createCard(card.getUserId(), card.getReaderId(), card.getTotalAmount(), card.getNote(),
+        borrowCardRepo.createCard(card.getUserId(), card.getReaderId(), card.getTotalAmount(), card.getNote(),
                 LocalDateTime.now());
-        return readerRepo.getCardCreatedId(card.getReaderId());
+        return borrowCardRepo.getCardCreatedId(card.getReaderId());
     }
 
     public ArrayList<String> addDetailCard(ArrayList<CreateDetailCardDTO> cardDetails) {
@@ -125,7 +121,7 @@ public class BorrowCardService {
             for (CreateDetailCardDTO cardDetail : cardDetails) {
                 String expire = cardDetail.getExpire() + "T22:00:00";
                 LocalDateTime expireDate = LocalDateTime.parse(expire);
-                readerRepo.addDetailCard(cardDetail.getBorrowCardId(), Integer.parseInt(cardDetail.getBookId()), expireDate, "borrowing");
+                borrowCardRepo.addDetailCard(cardDetail.getBorrowCardId(), Integer.parseInt(cardDetail.getBookId()), expireDate, "borrowing");
                 bookRepo.decreaseQtyBook(1, Integer.parseInt(cardDetail.getBookId()));
             }
         }
