@@ -9,6 +9,7 @@ import com.example.demo.dto.CreateCardDetailInput;
 import com.example.demo.dto.ReaderDTO;
 import com.example.demo.model.Reader;
 import com.example.demo.repository.ReaderRepo;
+import com.example.demo.service.BorrowCardService;
 import com.example.demo.service.ReaderService;
 
 import jakarta.servlet.http.HttpSession;
@@ -31,6 +32,9 @@ public class ReaderRestController {
     private ReaderService readerService;
 
     @Autowired
+    private BorrowCardService borrowCardService;
+
+    @Autowired
     private ReaderRepo readerRepo;
     
     @GetMapping("/checkReaderInfor")
@@ -45,12 +49,12 @@ public class ReaderRestController {
     
     @PostMapping("/createBorrowCard")
     public String createBorrowCard(@RequestBody CreateCardDTO card) {
-        return readerService.createCard(card);
+        return borrowCardService.createCard(card);
     }
     
     @PostMapping("/addDetailCard")
     public ArrayList<String> addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
-        return readerService.addDetailCard(cardDetailInput.getCardDetails());
+        return borrowCardService.addDetailCard(cardDetailInput.getCardDetails());
     }
 
     @PostMapping("/add_reader")

@@ -474,6 +474,7 @@ acptCreateCard.addEventListener("click", async function () {
     }).then(res => res.json());
 
     if (response.length > 0) {
+        console.log(response);
         if (response.includes("invalidBook")) {
             markItem(response);
             alert("Thông tin đầu sách không tồn tại, vui lòng thử lại");

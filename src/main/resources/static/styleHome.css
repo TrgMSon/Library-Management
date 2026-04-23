@@ -85,6 +85,19 @@ body {
     margin-bottom: 20px;
 }
 
+.optionDiv a {
+    text-decoration: none;
+    padding: 8px 0;
+    color: #111;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.optionDiv a:hover {
+    color: #c45500;
+    text-decoration: underline;
+}
+
 .sidebar .optionDiv p {
     padding: 8px 0;
     color: #111;
@@ -232,3 +245,4 @@ label {
 .searchInputCard {
     font-size: 18px;
 }
+

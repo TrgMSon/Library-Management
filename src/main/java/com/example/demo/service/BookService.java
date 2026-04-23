@@ -58,4 +58,8 @@ public class BookService {
     public void addBook(BookDTO book) {
         bookRepo.addBook(book.getName(), book.getDescription(), book.getAuthor(), book.getPublish(), book.getQuantity(), book.getUrlImg(), book.getType());
     }
+
+    public boolean isInStock(int bookId, int cartQty) {
+        return cartQty <= bookRepo.findQty(bookId);
+    }
 }
