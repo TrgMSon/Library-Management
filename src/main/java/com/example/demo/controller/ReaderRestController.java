@@ -4,17 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.dto.CreateCardDTO;
-import com.example.demo.dto.CreateCardDetailInput;
 import com.example.demo.dto.ReaderDTO;
 import com.example.demo.model.Reader;
 import com.example.demo.repository.ReaderRepo;
-import com.example.demo.service.BorrowCardService;
 import com.example.demo.service.ReaderService;
 
 import jakarta.servlet.http.HttpSession;
-
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +27,6 @@ public class ReaderRestController {
     private ReaderService readerService;
 
     @Autowired
-    private BorrowCardService borrowCardService;
-
-    @Autowired
     private ReaderRepo readerRepo;
     
     @GetMapping("/checkReaderInfor")
@@ -45,16 +37,6 @@ public class ReaderRestController {
     @GetMapping("/checkBorrowingBook")
     public String checkBorrowingBook(@RequestParam int readerId) {
         return readerService.checkBorrowingBook(readerId) + "";
-    }
-    
-    @PostMapping("/createBorrowCard")
-    public String createBorrowCard(@RequestBody CreateCardDTO card) {
-        return borrowCardService.createCard(card);
-    }
-    
-    @PostMapping("/addDetailCard")
-    public ArrayList<String> addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
-        return borrowCardService.addDetailCard(cardDetailInput.getCardDetails());
     }
 
     @PostMapping("/add_reader")

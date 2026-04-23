@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.BorrowCardDTO;
 import com.example.demo.dto.BorrowCardDetailDTO;
+import com.example.demo.dto.CreateCardDTO;
+import com.example.demo.dto.CreateCardDetailInput;
 import com.example.demo.service.BorrowCardService;
 
 import java.util.ArrayList;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 
 @RestController
@@ -41,6 +42,16 @@ public class BorrowCardController {
     @PostMapping("/deleteCard")
     public void deleteCard(@RequestBody Integer cardId) {
         borrowCardService.deleteCard(cardId);
+    }
+
+    @PostMapping("/createBorrowCard")
+    public String createBorrowCard(@RequestBody CreateCardDTO card) {
+        return borrowCardService.createCard(card);
+    }
+    
+    @PostMapping("/addDetailCard")
+    public ArrayList<String> addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
+        return borrowCardService.addDetailCard(cardDetailInput.getCardDetails());
     }
     
 }

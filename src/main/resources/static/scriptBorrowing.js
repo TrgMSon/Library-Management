@@ -440,7 +440,7 @@ acptCreateCard.addEventListener("click", async function () {
         return;
     }
 
-    response = await fetch("/api/reader/createBorrowCard", {
+    response = await fetch("/api/borrowCard/createBorrowCard", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -463,7 +463,7 @@ acptCreateCard.addEventListener("click", async function () {
         });
     }
 
-    response = await fetch("/api/reader/addDetailCard", {
+    response = await fetch("/api/borrowCard/addDetailCard", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
