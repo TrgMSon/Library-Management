@@ -35,7 +35,7 @@ public class BorrowCardController {
     }
     
     @GetMapping("/searchCard")
-    public ArrayList<BorrowCardDTO> getMethodName(@RequestParam String target, @RequestParam String option) {
+    public ArrayList<BorrowCardDTO> searchCard(@RequestParam String target, @RequestParam String option) {
         return borrowCardService.searchCard(target, option);
     }
     
