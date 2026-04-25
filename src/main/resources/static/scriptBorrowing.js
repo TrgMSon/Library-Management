@@ -304,10 +304,10 @@ async function loadDetailCard(row) {
 
     let cardDetail = await fetch("/api/borrowCard/getDetailCard?cardId=" + row.dataset.borrowCardId).then(res => res.json());
 
-    cardIdElement.innerText = "ID: " + cardDetail.borrowCardId;
-    userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
-    readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
-    createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.createdAt);
+    cardIdElement.innerText = "ID: " + cardDetail.borrowCardDTO.borrowCardId;
+    userElement.innerText = "Người tạo: " + cardDetail.borrowCardDTO.userName + " (ID: " + cardDetail.borrowCardDTO.userId + ")";
+    readerElement.innerText = "Độc giả: " + cardDetail.borrowCardDTO.readerName + " (ID: " + cardDetail.borrowCardDTO.readerId + ")";
+    createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.borrowCardDTO.createdAt);
 
     let books = cardDetail.books;
     for (let i = 0; i < books.length; i++) {

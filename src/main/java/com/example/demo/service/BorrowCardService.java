@@ -45,13 +45,14 @@ public class BorrowCardService {
         Optional<BorrowCard> borrowCard = borrowCardRepo.findById(cardId);
         if (!borrowCard.isEmpty()) {
             BorrowCard tmp = borrowCard.get();
-            detailCard.setBorrowCardId(cardId);
-            detailCard.setUserId(tmp.getUser().getUserId());
-            detailCard.setUserName(tmp.getUser().getName());
-            detailCard.setReaderId(tmp.getReader().getReaderId());
-            detailCard.setReaderName(tmp.getReader().getName());
+            detailCard.setBorrowCardDTO(new BorrowCardDTO());
+            detailCard.getBorrowCardDTO().setBorrowCardId(cardId);
+            detailCard.getBorrowCardDTO().setUserId(tmp.getUser().getUserId());
+            detailCard.getBorrowCardDTO().setUserName(tmp.getUser().getName());
+            detailCard.getBorrowCardDTO().setReaderId(tmp.getReader().getReaderId());
+            detailCard.getBorrowCardDTO().setReaderName(tmp.getReader().getName());
             detailCard.setTotalAmount(tmp.getTotalAmount());
-            detailCard.setCreatedAt(tmp.getCreatedAt());
+            detailCard.getBorrowCardDTO().setCreatedAt(tmp.getCreatedAt());
         }
 
         ArrayList<BorrowCardDetail> borrowCardDetails = borrowCardRepo.findBorrowCardDetail(cardId);
