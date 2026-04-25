@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.BookDTO;
 import com.example.demo.model.Book;
 import com.example.demo.repository.BookRepo;
 
@@ -55,7 +54,7 @@ public class BookService {
         bookRepo.updateBook(book.getQuantity(), book.getName(), book.getDescription(), book.getAuthor(), book.getPublish(), book.getType(), book.getUrlImg(), book.getBookId());
     }
 
-    public void addBook(BookDTO book) {
+    public void addBook(Book book) {
         bookRepo.addBook(book.getName(), book.getDescription(), book.getAuthor(), book.getPublish(), book.getQuantity(), book.getUrlImg(), book.getType());
     }
 
