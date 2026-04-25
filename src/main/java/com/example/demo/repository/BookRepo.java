@@ -30,7 +30,7 @@ public interface BookRepo extends JpaRepository<Book, Integer> {
         Integer checkBookInCard(int bookId);
 
         @Query(value = "SELECT quantity FROM book WHERE book_id = ?1", nativeQuery = true)
-        Integer findQty(int book_id);
+        Integer findQty(int bookId);
 
         @Transactional
         @Modifying
