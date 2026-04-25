@@ -67,8 +67,8 @@ public class BookController {
     } 
 
     @PostMapping("/updateBook")
-    public void updateBook(@RequestBody BookDTO bookDTO) {
-        bookService.updateBook(bookDTO);
+    public void updateBook(@RequestBody Book book) {
+        bookService.updateBook(book);
     }
 
     @PostMapping("/upload-image")

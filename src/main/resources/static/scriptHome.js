@@ -309,7 +309,7 @@ inforDiv.addEventListener("click", async function (e) {
             });
         }
 
-        alert("Cập nhật thành công");
+        alert("Thêm đầu sách thành công");
         waiting.classList.add("hide");
 
         inforDiv.style.display = "none";

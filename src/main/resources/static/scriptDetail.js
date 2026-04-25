@@ -5,7 +5,9 @@ const userIdLoginP = document.getElementById("userIdLoginP");
 const mainView = document.querySelector(".main-view-detail-book");
 const inforDiv = document.querySelector(".infor-div");
 const goHomeBtn = document.getElementById("goHomeBtn");
+const waiting = document.getElementById("waiting");
 
+waiting.classList.add("hide");
 goHomeBtn.style.cursor = "default";
 inforDiv.style.display = "none";
 
@@ -21,6 +23,8 @@ goBackBtn.addEventListener("click", function () {
 deleteBtn.addEventListener("click", async function () {
     let acptDelete = confirm("Bạn có chắc chắn muốn xóa đầu sách này?");
     if (acptDelete) {
+        waiting.classList.remove("hide");
+
         let response = await fetch("/api/book/deleteBook", {
             method: "POST",
             headers: {
@@ -32,11 +36,15 @@ deleteBtn.addEventListener("click", async function () {
         }).then(res => res.text());
 
         if (response === "false") {
+            waiting.classList.add("hide");
             alert("Đầu sách đang có trong phiếu mượn, không thể xóa");
             return;
         }
 
+        waiting.classList.add("hide");
         alert("Xóa đầu sách thành công");
+
+        window.location.href = "/home";
     }
 });
 
@@ -71,6 +79,8 @@ editBtn.addEventListener("click", async function () {
 
 inforDiv.addEventListener("click", async function (e) {
     if (e.target.classList.contains("acptBtn")) {
+        waiting.classList.remove("hide");
+
         let nameInput = document.getElementById("bookName");
         let authorInput = document.getElementById("author");
         let descInput = document.getElementById("desc");
@@ -89,36 +99,42 @@ inforDiv.addEventListener("click", async function (e) {
 
         if (name === "") {
             nameInput.focus();
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin");
             return;
         }
 
         if (author === "") {
             authorInput.focus();
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin");
             return;
         }
 
         if (publish === "") {
             publishInput.focus();
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin");
             return;
         }
 
         if (description === "") {
             descInput.focus();
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin");
             return;
         }
 
         if (type === "") {
             typeInput.focus();
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin");
             return;
         }
 
         if (quantity === "") {
             qtyInput.focus();
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin");
             return;
         }
@@ -175,6 +191,7 @@ inforDiv.addEventListener("click", async function (e) {
             });
         }
 
+        waiting.classList.add("hide");
         alert("Cập nhật thành công");
 
         inforDiv.style.display = "none";

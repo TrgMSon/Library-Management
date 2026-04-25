@@ -51,7 +51,7 @@ public class BookService {
         return bookRepo.checkBookInCard(bookId) > 0;
     }
 
-    public void updateBook(BookDTO book) {
+    public void updateBook(Book book) {
         bookRepo.updateBook(book.getQuantity(), book.getName(), book.getDescription(), book.getAuthor(), book.getPublish(), book.getType(), book.getUrlImg(), book.getBookId());
     }
 
