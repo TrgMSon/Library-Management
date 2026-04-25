@@ -40,7 +40,7 @@ public class BookController {
     }
 
     @GetMapping("/getAllBook")
-    public ArrayList<Book> getPagingBook() {
+    public ArrayList<Book> getAllBook() {
         return bookService.getAllBook();
     }
 
