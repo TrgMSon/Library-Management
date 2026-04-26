@@ -43,7 +43,7 @@ public class MainController {
         if (result != null) {
             session.setAttribute("userId", result.getUserId() + "");
             session.setAttribute("role", result.getRole());
-            session.setAttribute("loggedInUser", user);
+            session.setAttribute("loggedInUser", result);
             return "redirect:/home";
         }
         else {

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.CreateCardDTO;
@@ -52,16 +54,17 @@ public class ReaderService {
         return bookIds;
     }
 
-    public boolean deleteReader(int id) {
-        Reader reader = readerRepo.findById(id).orElse(null);
-        if (reader != null) {
-            List<BorrowCard> borrowCardList = borrowCardRepo.findByReader(reader);
-            if (borrowCardList != null) return false;
-            else {
-                readerRepo.delete(reader);
-                return true;
-            }
+    public ResponseEntity<String> deleteReader(int id) {
+        if (borrowCardRepo.existsBorrowCardByReader_ReaderId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Độc giả đang có phiếu mượn, không thể xóa");
         }
-        return false;
+
+        Reader reader = readerRepo.findById(id).orElse(null);
+        if (reader == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Độc giả không tồn tại");
+        }
+
+        readerRepo.delete(reader);
+        return ResponseEntity.ok().body("Xoá độc giả thành công!");
     }
 }

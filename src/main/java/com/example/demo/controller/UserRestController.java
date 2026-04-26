@@ -20,8 +20,7 @@ public class UserRestController {
 
     @PostMapping("/add_user")
     public ResponseEntity<String> addUser(HttpSession session, @RequestBody UserDTO userDTO) {
-        String userId = (String) session.getAttribute("userId");
-        User currUser = userService.findUserById(Integer.parseInt(userId));
+        User currUser = (User) session.getAttribute("loggedInUser");
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
@@ -30,29 +29,12 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
         }
 
-        String name = userDTO.getName();
-        String email = userDTO.getEmail();
-        if (userRepo.findByEmail(email).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
-        }
-
-        String password = userDTO.getPassword();
-        String role = userDTO.getRole();
-
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole(role);
-
-        userRepo.save(user);
-        return ResponseEntity.ok().body("Thêm người dùng thành công!");
+        return userService.addUser(userDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(HttpSession session, @PathVariable int id) {
-        String userId = (String) session.getAttribute("userId");
-        User currUser = userService.findUserById(Integer.parseInt(userId));
+    @GetMapping("/{id}/update_user")
+    public ResponseEntity<User> getUser(HttpSession session, @PathVariable("id") int id) {
+        User currUser = (User) session.getAttribute("loggedInUser");
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -70,10 +52,9 @@ public class UserRestController {
         return ResponseEntity.ok().body(employee);
     }
 
-    @PostMapping("/update_user")
-    public ResponseEntity<String> processUpdatingUser(HttpSession session, @RequestBody User updatedUser) {
-        String userId = (String) session.getAttribute("userId");
-        User currUser = userService.findUserById(Integer.parseInt(userId));
+    @PostMapping("/{id}/update_user")
+    public ResponseEntity<String> updateUser(HttpSession session, @RequestBody User updatedUser, @PathVariable("id") int id) {
+        User currUser = (User) session.getAttribute("loggedInUser");
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
@@ -82,26 +63,26 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
         }
 
-        User employee = userRepo.findById(updatedUser.getUserId()).orElse(null);
-        if (employee == null) {
-            return ResponseEntity.notFound().build();
+        User old = userRepo.findById(id).orElse(null);
+        String email = null;
+        if (old != null) {
+            email = old.getEmail();
         }
 
-        if (userRepo.findByEmail(updatedUser.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
-        }
-
-        employee.setEmail(updatedUser.getEmail());
-        employee.setRole(updatedUser.getRole());
-        employee.setName(updatedUser.getName());
-
-        userRepo.save(employee);
-        return ResponseEntity.ok("Cập nhật thành công!");
+        return userService.updateUser(updatedUser, email);
     }
 
     @GetMapping("/{id}/delete")
-    public ResponseEntity<?> deleteUser(HttpSession session, @PathVariable("id") int id) {
-        String userId = (String) session.getAttribute("userId");
-        return userService.deleteUser(id, Integer.parseInt(userId));
+    public ResponseEntity<String> deleteUser(HttpSession session, @PathVariable("id") int userId) {
+        User currUser = (User) session.getAttribute("loggedInUser");
+        if (currUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
+        }
+
+        if (currUser.getRole() != null && currUser.getRole().equals("user")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
+        }
+
+        return userService.deleteUser(userId);
     }
 }
