@@ -43,16 +43,6 @@ public class ReaderRestController {
     public String checkBorrowingBook(@RequestParam int readerId) {
         return readerService.checkBorrowingBook(readerId) + "";
     }
-    
-    @PostMapping("/createBorrowCard")
-    public String createBorrowCard(@RequestBody CreateCardDTO card) {
-        return readerService.createCard(card);
-    }
-    
-    @PostMapping("/addDetailCard")
-    public ArrayList<String> addDetailCard(@RequestBody CreateCardDetailInput cardDetailInput) {
-        return readerService.addDetailCard(cardDetailInput.getCardDetails());
-    }
 
     @PostMapping("/add_reader")
     public ResponseEntity<String> addReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
