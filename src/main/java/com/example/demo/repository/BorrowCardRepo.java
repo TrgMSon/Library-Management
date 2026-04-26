@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.model.Reader;
+import com.example.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,8 +48,8 @@ public interface BorrowCardRepo extends JpaRepository<BorrowCard, Integer> {
         ArrayList<BorrowCard> findCardById(int readerId);
 
         List<BorrowCard> findByReader(Reader reader);
-
-        List<BorrowCard> findByUser(User user);
+        boolean existsBorrowCardByUser_UserId(int userId);
+        boolean existsBorrowCardByReader_ReaderId(int readerId);
 
         // Thống kê sách mượn nhiều theo khoảng thời gian
         @Query("SELECT br.book.bookId, br.book.name, br.book.author, COUNT(br.card.borrowCardId) as borrowCount " +

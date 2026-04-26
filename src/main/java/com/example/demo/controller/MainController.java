@@ -43,12 +43,14 @@ public class MainController {
         if (result != null) {
             session.setAttribute("userId", result.getUserId() + "");
             session.setAttribute("role", result.getRole());
+            session.setAttribute("loggedInUser", result);
             return "redirect:/home";
         }
         else {
             ra.addFlashAttribute("error", "Email hoặc mật khẩu không đúng, vui lòng thử lại.");
             return "redirect:/login";
         }
+
     }
 
     @GetMapping("/home")

@@ -1,15 +1,20 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.dto.CreateCardDTO;
+import com.example.demo.dto.CreateCardDetailInput;
 import com.example.demo.dto.ReaderDTO;
 import com.example.demo.model.Reader;
 import com.example.demo.repository.ReaderRepo;
 import com.example.demo.service.ReaderService;
 
 import jakarta.servlet.http.HttpSession;
+
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,33 +45,20 @@ public class ReaderRestController {
     }
 
     @PostMapping("/add_reader")
-    public ResponseEntity<String> processAddingReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
+    public ResponseEntity<String> addReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
+        User currUser = (User) session.getAttribute("loggedInUser");
+        if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
-        String name = readerDTO.getName();
-        String email = readerDTO.getEmail();
-        if (readerRepo.findByEmail(email).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
-        }
-        String address = readerDTO.getAddress();
-
-        Reader reader = new Reader();
-        reader.setName(name);
-        reader.setEmail(email);
-        reader.setAddress(address);
-
-        readerRepo.save(reader);
-        return ResponseEntity.ok().body("Thêm độc giả thành công!");
+        return readerService.addReader(readerDTO);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Reader> getReader(HttpSession session, @PathVariable int id) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
-            return ResponseEntity.noContent().build();
+        User currUser = (User) session.getAttribute("loggedInUser");
+        if (currUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         Reader reader = readerRepo.findById(id).orElse(null);
@@ -80,28 +72,22 @@ public class ReaderRestController {
 
     @PostMapping("/update_reader")
     public ResponseEntity<String> updateReader(HttpSession session, @RequestBody Reader updatedReader) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
+        User currUser = (User) session.getAttribute("loggedInUser");
+        if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
-        if (!readerRepo.existsById(updatedReader.getReaderId())) {
-            return ResponseEntity.notFound().build();
-        }
-
-        readerRepo.save(updatedReader);
-        return ResponseEntity.ok("Cập nhật thành công!");
+        return readerService.updateReader(updatedReader);
     }
 
     @GetMapping("/{id}/delete")
-    public ResponseEntity<String> deleteReader(HttpSession session, @PathVariable("id") int id, RedirectAttributes redirectAttributes) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
+    public ResponseEntity<String> deleteReader(HttpSession session, @PathVariable("id") int id) {
+        User currUser = (User) session.getAttribute("loggedInUser");
+        if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
-        if (readerService.deleteReader(id)) return ResponseEntity.ok().body("Xoá độc giả thành công!");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Độc giả đang có phiếu mượn, không thể xóa"); 
+        return readerService.deleteReader(id);
     }
     
 }

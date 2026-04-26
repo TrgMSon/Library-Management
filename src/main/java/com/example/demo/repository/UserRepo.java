@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.model.User;
 
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
@@ -24,4 +27,5 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     void save(String email, String name, String password, String role);
 
     Optional<User> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

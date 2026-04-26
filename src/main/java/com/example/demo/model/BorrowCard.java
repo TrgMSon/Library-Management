@@ -34,7 +34,7 @@ public class BorrowCard {
     private Reader reader;
 
     @Column(name="created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name="total_amount")
     private BigDecimal totalAmount;

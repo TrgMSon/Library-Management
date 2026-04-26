@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,31 +39,58 @@ public class UserService {
         userRepo.save(user.getEmail(), user.getName(), user.getPassword(), "user");
     }
 
-    public ResponseEntity<?> deleteUser(int id, int userId) {
-        User currUser = findUserById(userId);
-        if (currUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
+    public ResponseEntity<String> addUser(UserDTO userDTO) {
+        String name = userDTO.getName();
+        String email = userDTO.getEmail();
+        if (userRepo.existsByEmail(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
         }
 
-        if (currUser.getRole() != null && currUser.getRole().equals("user")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
+        String password = userDTO.getPassword();
+        String role = userDTO.getRole();
+
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(role);
+
+        userRepo.save(user);
+        return ResponseEntity.ok().body("Thêm người dùng thành công!");
+    }
+
+    public ResponseEntity<String> updateUser(User updatedUser) {
+        User employee = userRepo.findById(updatedUser.getUserId()).orElse(null);
+        if (employee == null) {
+            return ResponseEntity.notFound().build();
         }
 
-        if (userId == id) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Không thể xoá người dùng hiện tại đang đăng nhập!");
+        String oldEmail = employee.getEmail();
+        String newEmail = updatedUser.getEmail();
+
+        if (!oldEmail.equals(newEmail) && userRepo.existsByEmail(newEmail)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
         }
 
-        User user = userRepo.findById(id).orElse(null);
-        assert user != null;
+        employee.setEmail(updatedUser.getEmail());
+        employee.setRole(updatedUser.getRole());
+        employee.setName(updatedUser.getName());
 
-        List<BorrowCard> borrowCards = borrowCardRepo.findByUser(user);
-        if (borrowCards.isEmpty()) {
-            userRepo.delete(user);
-            return ResponseEntity.ok().body("Xoá người dùng thành công!");
+        userRepo.save(employee);
+        return ResponseEntity.ok("Cập nhật thành công!");
+    }
+
+    public ResponseEntity<String> deleteUser(int userId) {
+        if (borrowCardRepo.existsBorrowCardByUser_UserId(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Người dùng đã từng tạo phiếu mượn, không thể xoá!");
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Không thể xoá, người dùng đang cho độc giả mượn sách");
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User không tồn tại");
+        }
+
+        userRepo.delete(user);
+        return ResponseEntity.ok("Xoá người dùng thành công!");
     }
 }
