@@ -63,13 +63,7 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Hãy yêu cầu quyền truy cập từ admin");
         }
 
-        User old = userRepo.findById(id).orElse(null);
-        String email = null;
-        if (old != null) {
-            email = old.getEmail();
-        }
-
-        return userService.updateUser(updatedUser, email);
+        return userService.updateUser(updatedUser);
     }
 
     @GetMapping("/{id}/delete")

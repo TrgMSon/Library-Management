@@ -55,23 +55,13 @@ public class ReaderRestController {
     }
 
     @PostMapping("/add_reader")
-    public ResponseEntity<String> processAddingReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
+    public ResponseEntity<String> addReader(HttpSession session, @RequestBody ReaderDTO readerDTO) {
         User currUser = (User) session.getAttribute("loggedInUser");
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
-        String name = readerDTO.getName();
-        String email = readerDTO.getEmail();
-        String address = readerDTO.getAddress();
-
-        Reader reader = new Reader();
-        reader.setName(name);
-        reader.setEmail(email);
-        reader.setAddress(address);
-
-        readerRepo.save(reader);
-        return ResponseEntity.ok().body("Thêm độc giả thành công!");
+        return readerService.addReader(readerDTO);
     }
 
     @GetMapping("/{id}")
@@ -97,12 +87,7 @@ public class ReaderRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
         }
 
-        if (!readerRepo.existsById(updatedReader.getReaderId())) {
-            return ResponseEntity.notFound().build();
-        }
-
-        readerRepo.save(updatedReader);
-        return ResponseEntity.ok("Cập nhật thành công!");
+        return readerService.updateReader(updatedReader);
     }
 
     @GetMapping("/{id}/delete")

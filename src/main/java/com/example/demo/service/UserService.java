@@ -59,13 +59,15 @@ public class UserService {
         return ResponseEntity.ok().body("Thêm người dùng thành công!");
     }
 
-    public ResponseEntity<String> updateUser(User updatedUser, String oldEmail) {
+    public ResponseEntity<String> updateUser(User updatedUser) {
         User employee = userRepo.findById(updatedUser.getUserId()).orElse(null);
         if (employee == null) {
             return ResponseEntity.notFound().build();
         }
 
+        String oldEmail = employee.getEmail();
         String newEmail = updatedUser.getEmail();
+
         if (!oldEmail.equals(newEmail) && userRepo.existsByEmail(newEmail)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email người dùng đã tồn tại, vui lòng nhập email khác!");
         }

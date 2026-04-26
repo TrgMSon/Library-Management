@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.dto.ReaderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,29 @@ public class ReaderService {
             else bookIds.add(cardDetail.getBookId() + "");
         }
         return bookIds;
+    }
+
+    public ResponseEntity<String> addReader(ReaderDTO readerDTO) {
+        String name = readerDTO.getName();
+        String email = readerDTO.getEmail();
+        String address = readerDTO.getAddress();
+
+        Reader reader = new Reader();
+        reader.setName(name);
+        reader.setEmail(email);
+        reader.setAddress(address);
+
+        readerRepo.save(reader);
+        return ResponseEntity.ok().body("Thêm độc giả thành công!");
+    }
+
+    public ResponseEntity<String> updateReader(Reader updatedReader) {
+        if (!readerRepo.existsById(updatedReader.getReaderId())) {
+            return ResponseEntity.notFound().build();
+        }
+
+        readerRepo.save(updatedReader);
+        return ResponseEntity.ok("Cập nhật thành công!");
     }
 
     public ResponseEntity<String> deleteReader(int id) {
