@@ -1,16 +1,12 @@
 package com.example.demo.repository;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.Reader;
-
-import jakarta.transaction.Transactional;
 
 @Repository
 public interface ReaderRepo extends JpaRepository<Reader, Integer> {
@@ -21,26 +17,5 @@ public interface ReaderRepo extends JpaRepository<Reader, Integer> {
             """, nativeQuery = true)
     int getQtyBorrowing(int readerId);
 
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO borrow_card(user_id, reader_id, total_amount, note, created_at) VALUES(?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-    void createCard(int userId, int readerId, BigDecimal totalAmount, String note, LocalDateTime createdAt);
-
-    @Query(value = "SELECT borrow_card_id FROM borrow_card WHERE reader_id = ?1 ORDER BY created_at DESC LIMIT 1", nativeQuery = true)
-    String getCardCreatedId(int readerId);
-
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO borrow_card_detail(borrow_card_id, book_id, expire, status) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
-    void addDetailCard(int borrowCardId, int bookId, LocalDateTime expire, String status);
-
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE book SET quantity = quantity - ?1 WHERE quantity >= ?1 AND book_id = ?2", nativeQuery = true)
-    int decreaseQtyBook(int quantityBorrow, int bookId);
-
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE book SET quantity = quantity + ?1 WHERE book_id = ?2", nativeQuery = true)
-    int increaseQtyBook(int quantityReturn, int bookId);
+    Optional<Reader> findByEmail(String email);
 }

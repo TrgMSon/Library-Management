@@ -15,10 +15,10 @@ async function loadDetailCardForReturn(cardId) {
 
     let cardDetail = await fetch("/api/borrowCard/getDetailCard?cardId=" + cardId).then(res => res.json());
 
-    cardIdElement.innerText = "ID: " + cardDetail.borrowCardId;
-    userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
-    readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
-    createdElement.innerText = "Ngày tạo: " + cardDetail.createdAt;
+    cardIdElement.innerText = "ID: " + cardDetail.borrowCardDTO.borrowCardId;
+    userElement.innerText = "Người tạo: " + cardDetail.borrowCardDTO.userName + " (ID: " + cardDetail.borrowCardDTO.userId + ")";
+    readerElement.innerText = "Độc giả: " + cardDetail.borrowCardDTO.readerName + " (ID: " + cardDetail.borrowCardDTO.readerId + ")";
+    createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.borrowCardDTO.createdAt);
     totalAmountElement.innerText = formatTotal(cardDetail.totalAmount + "") + " đồng";
 
     let books = cardDetail.books;
@@ -100,7 +100,7 @@ function updateTotalFine() {
 
     if (totalFine > 0) {
         pendingFineDiv.style.display = "block";
-        document.getElementById("totalFineValue").innerHTML = "<strong>" + totalFine + " đồng</strong>";
+        document.getElementById("totalFineValue").innerHTML = "<strong>" + formatTotal(totalFine + "") + " đồng</strong>";
     } else {
         pendingFineDiv.style.display = "none";
     }
@@ -109,7 +109,7 @@ function updateTotalFine() {
 function handleReturnBook(button) {
     const row = button.closest("tr");
     const bookId = row.cells[0].innerText.trim();
-    const expireDate = row.cells[1].innerText.trim();
+    const expireDate = row.cells[2].innerText.trim();
 
     const borrowCardId = currentCardId;
     const fine = calculateFine(expireDate);

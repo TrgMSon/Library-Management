@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.demo.dto.BookDTO;
 import com.example.demo.dto.BookDeleteDTO;
 import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
@@ -40,7 +39,7 @@ public class BookController {
     }
 
     @GetMapping("/getAllBook")
-    public ArrayList<Book> getPagingBook() {
+    public ArrayList<Book> getAllBook() {
         return bookService.getAllBook();
     }
 
@@ -67,8 +66,8 @@ public class BookController {
     } 
 
     @PostMapping("/updateBook")
-    public void updateBook(@RequestBody BookDTO bookDTO) {
-        bookService.updateBook(bookDTO);
+    public void updateBook(@RequestBody Book book) {
+        bookService.updateBook(book);
     }
 
     @PostMapping("/upload-image")
@@ -78,7 +77,7 @@ public class BookController {
     }
 
     @PostMapping("/addBook")
-    public void addBook(@RequestBody BookDTO book) {
+    public void addBook(@RequestBody Book book) {
         bookService.addBook(book);
     }
 }

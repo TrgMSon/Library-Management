@@ -304,10 +304,10 @@ async function loadDetailCard(row) {
 
     let cardDetail = await fetch("/api/borrowCard/getDetailCard?cardId=" + row.dataset.borrowCardId).then(res => res.json());
 
-    cardIdElement.innerText = "ID: " + cardDetail.borrowCardId;
-    userElement.innerText = "Người tạo: " + cardDetail.userName + " (ID: " + cardDetail.userId + ")";
-    readerElement.innerText = "Độc giả: " + cardDetail.readerName + " (ID: " + cardDetail.readerId + ")";
-    createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.createdAt);
+    cardIdElement.innerText = "ID: " + cardDetail.borrowCardDTO.borrowCardId;
+    userElement.innerText = "Người tạo: " + cardDetail.borrowCardDTO.userName + " (ID: " + cardDetail.borrowCardDTO.userId + ")";
+    readerElement.innerText = "Độc giả: " + cardDetail.borrowCardDTO.readerName + " (ID: " + cardDetail.borrowCardDTO.readerId + ")";
+    createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.borrowCardDTO.createdAt);
 
     let books = cardDetail.books;
     for (let i = 0; i < books.length; i++) {
@@ -389,7 +389,7 @@ searchBookForm.addEventListener("submit", async function (e) {
 function markItem(bookIds) {
     let rowBooks = document.querySelectorAll(".rowBook");
     rowBooks.forEach(book => {
-        if (bookIds.includes((book.cells)[0].innerText)) book.style.backgroundColor = "#A9A9A9";
+        if (bookIds.includes((book.cells)[0].innerText) || bookIds.includes("invalidBook-" + (book.cells)[0].innerText)) book.style.backgroundColor = "#A9A9A9";
     });
 }
 
@@ -440,7 +440,7 @@ acptCreateCard.addEventListener("click", async function () {
         return;
     }
 
-    response = await fetch("/api/reader/createBorrowCard", {
+    response = await fetch("/api/borrowCard/createBorrowCard", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -463,7 +463,7 @@ acptCreateCard.addEventListener("click", async function () {
         });
     }
 
-    response = await fetch("/api/reader/addDetailCard", {
+    response = await fetch("/api/borrowCard/addDetailCard", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -474,8 +474,24 @@ acptCreateCard.addEventListener("click", async function () {
     }).then(res => res.json());
 
     if (response.length > 0) {
-        markItem(response);
-        alert("Số lượng đầu sách trong kho không đủ");
+        console.log(response);
+        if (response.includes("invalidBook")) {
+            markItem(response);
+            alert("Thông tin đầu sách không tồn tại, vui lòng thử lại");
+        }
+        else {
+            markItem(response);
+            alert("Số lượng đầu sách trong kho không đủ");
+        }
+
+        await fetch("/api/borrowCard/deleteCard", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(borrowCardId)
+        });
+
         return;
     }
 

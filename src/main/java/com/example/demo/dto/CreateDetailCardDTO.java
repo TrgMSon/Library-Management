@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateDetailCardDTO {
     private int borrowCardId;
-    private int bookId;
+    private String bookId;
     private String expire;
 }

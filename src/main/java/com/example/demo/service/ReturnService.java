@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.BorrowCard;
 import com.example.demo.model.BorrowCardDetail;
 import com.example.demo.model.BorrowCardDetailId;
+import com.example.demo.repository.BookRepo;
 import com.example.demo.repository.BorrowCardRepo;
-import com.example.demo.repository.ReaderRepo;
 import com.example.demo.repository.ReturnRepo;
 
 @Service
@@ -25,8 +25,9 @@ public class ReturnService {
 
     @Autowired
     private BorrowCardRepo borrowCardRepo;
+    
     @Autowired
-    private ReaderRepo readerRepo;
+    private BookRepo bookRepo;
 
     @Transactional
     public boolean processReturn(@NonNull Integer borrowCardId, Integer bookId, String returnDate, Long fine) {
@@ -44,7 +45,7 @@ public class ReturnService {
                 return false;
             }
 
-            readerRepo.increaseQtyBook(1, bookId);
+            bookRepo.increaseQtyBook(1, bookId);
             LocalDateTime returnDateTime;
 
             try {
