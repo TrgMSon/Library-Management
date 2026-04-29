@@ -85,4 +85,8 @@ public interface BorrowCardRepo extends JpaRepository<BorrowCard, Integer> {
         @Modifying
         @Query(value = "INSERT INTO borrow_card_detail(borrow_card_id, book_id, expire, status) VALUES(?1, ?2, ?3, ?4)", nativeQuery = true)
         void addDetailCard(int borrowCardId, int bookId, LocalDateTime expire, String status);
+
+        boolean existsBorrowCardByUser_UserId(int userId);
+        
+        boolean existsBorrowCardByReader_ReaderId(int readerId);
 }

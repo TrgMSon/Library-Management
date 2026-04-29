@@ -383,7 +383,10 @@ searchBookForm.addEventListener("submit", async function (e) {
     if (target === "") return;
 
     let books = await fetch("/api/book/searchBookName?name=" + target).then(res => res.json());
-    for (let i = 0; i < books.length; i++) addBookSearch(books[i]);
+    if (books.length > 0) {
+        for (let i = 0; i < books.length; i++) addBookSearch(books[i]);
+    }
+    else alert("Không có kết quả phù hợp");
 });
 
 function markItem(bookIds) {
