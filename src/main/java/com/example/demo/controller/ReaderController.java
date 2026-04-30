@@ -26,9 +26,7 @@ public class ReaderController {
     @GetMapping("/manage_reader")
     public String openReaderManagementPage(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
-            return "redirect:/login";
-        }
+        if (userId == null) return "redirect:/login";
 
         List<Reader> readerList = readerRepo.findAll();
         if (readerList.isEmpty()) {
