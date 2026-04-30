@@ -397,8 +397,11 @@ function markItem(bookIds) {
 }
 
 acptCreateCard.addEventListener("click", async function () {
+    waiting.classList.remove("hide");
+
     let readerId = readerIdInput.value.trim();
     if (readerId === "") {
+        waiting.classList.add("hide");
         alert("Vui lòng nhập mã độc giả");
         return;
     }
@@ -412,12 +415,14 @@ acptCreateCard.addEventListener("click", async function () {
         }
 
         if ((book.cells)[1].querySelector("input").value === "") {
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin sách mượn");
             isError = true;
             return;
         }
 
         if ((book.cells)[0].innerText.trim() === "") {
+            waiting.classList.add("hide");
             alert("Vui lòng nhập đủ thông tin sách mượn");
             isError = true;
             return;
@@ -427,18 +432,21 @@ acptCreateCard.addEventListener("click", async function () {
 
     rowBooks = document.querySelectorAll(".rowBook");
     if (rowBooks.length === 0) {
+        waiting.classList.add("hide");
         alert("Vui lòng chọn sách mượn");
         return;
     }
 
     let response = await fetch("/api/reader/checkReaderInfor?readerId=" + readerId).then(res => res.text());
     if (response === "false") {
+        waiting.classList.add("hide");
         alert("Thông tin độc giả không tồn tại, vui lòng thêm độc giả");
         return;
     }
 
     let qtyBorrowing = await fetch("/api/reader/checkBorrowingBook?readerId=" + readerId).then(res => res.text());
     if (Number(qtyBorrowing) + rowBooks.length > 5) {
+        waiting.classList.add("hide");
         alert("Độc giả đang mượn " + qtyBorrowing + " quyển sách, chỉ được mượn thêm " + (5 - Number(qtyBorrowing)) + " quyển sách");
         return;
     }
@@ -480,10 +488,12 @@ acptCreateCard.addEventListener("click", async function () {
         console.log(response);
         if (response.includes("invalidBook")) {
             markItem(response);
+            waiting.classList.add("hide");
             alert("Thông tin đầu sách không tồn tại, vui lòng thử lại");
         }
         else {
             markItem(response);
+            waiting.classList.add("hide");
             alert("Số lượng đầu sách trong kho không đủ");
         }
 
@@ -494,12 +504,10 @@ acptCreateCard.addEventListener("click", async function () {
             },
             body: JSON.stringify(borrowCardId)
         });
-
-        return;
     }
 
     resetCreateCard();
-
+    waiting.classList.add("hide");
     alert("Tạo phiếu mượn thành công");
 });
 
