@@ -53,7 +53,7 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/update_user")
-    public ResponseEntity<String> updateUser(HttpSession session, @RequestBody User updatedUser, @PathVariable("id") int id) {
+    public ResponseEntity<String> updateUser(HttpSession session, @RequestBody User updatedUser) {
         User currUser = (User) session.getAttribute("loggedInUser");
         if (currUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập trước để sử dụng tính năng");
