@@ -127,6 +127,11 @@ function addCardToUI(card) {
         loadDetailCard(row);
         mainView.style.display = "none";
         cardDiv.style.display = "flex";
+
+        if (userLabel.dataset.role === "admin") {
+            acptEditCard.style.display = "none";
+            noteContent.disabled = "true";
+        }
     });
 
     listCard.appendChild(row);
@@ -308,6 +313,7 @@ async function loadDetailCard(row) {
     userElement.innerText = "Người tạo: " + cardDetail.borrowCardDTO.userName + " (ID: " + cardDetail.borrowCardDTO.userId + ")";
     readerElement.innerText = "Độc giả: " + cardDetail.borrowCardDTO.readerName + " (ID: " + cardDetail.borrowCardDTO.readerId + ")";
     createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.borrowCardDTO.createdAt);
+    noteContent.value = cardDetail.note;
 
     let books = cardDetail.books;
     for (let i = 0; i < books.length; i++) {
@@ -514,6 +520,7 @@ acptCreateCard.addEventListener("click", async function () {
 function resetCreateCard() {
     readerIdInput.value = "";
     searchBookInput.value = "";
+    noteContent.value = "";
 
     let borrowBooks = document.querySelectorAll(".rowBook");
     if (borrowBooks != null) borrowBooks.forEach(book => book.remove());

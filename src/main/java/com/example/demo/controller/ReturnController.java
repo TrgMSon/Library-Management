@@ -31,7 +31,8 @@ public class ReturnController {
                 returnBookDTO.getBorrowCardId(),
                 returnBookDTO.getBookId(),
                 returnBookDTO.getReturnDate(),
-                returnBookDTO.getFine()
+                returnBookDTO.getFine(),
+                returnBookDTO.getNote()
             );
             
             response.put("success", success);

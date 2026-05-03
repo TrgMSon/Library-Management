@@ -53,6 +53,7 @@ public class BorrowCardService {
             detailCard.getBorrowCardDTO().setReaderName(tmp.getReader().getName());
             detailCard.setTotalAmount(tmp.getTotalAmount());
             detailCard.getBorrowCardDTO().setCreatedAt(tmp.getCreatedAt());
+            detailCard.setNote(tmp.getNote());
         }
 
         ArrayList<BorrowCardDetail> borrowCardDetails = borrowCardRepo.findBorrowCardDetail(cardId);

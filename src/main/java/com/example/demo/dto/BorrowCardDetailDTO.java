@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class BorrowCardDetailDTO {
     private BorrowCardDTO borrowCardDTO;
+    private String note;
     private ArrayList<BookInCardDTO> books;
     private BigDecimal totalAmount;
 }

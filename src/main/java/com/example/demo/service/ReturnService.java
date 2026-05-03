@@ -25,12 +25,13 @@ public class ReturnService {
 
     @Autowired
     private BorrowCardRepo borrowCardRepo;
-    
+
     @Autowired
     private BookRepo bookRepo;
 
     @Transactional
-    public boolean processReturn(@NonNull Integer borrowCardId, Integer bookId, String returnDate, Long fine) {
+    public boolean processReturn(@NonNull Integer borrowCardId, Integer bookId, String returnDate, Long fine,
+            String note) {
         try {
 
             BorrowCardDetailId detailId = new BorrowCardDetailId();
@@ -68,6 +69,12 @@ public class ReturnService {
                     borrowCard.setTotalAmount(currentFine.add(BigDecimal.valueOf(fine)));
                     borrowCardRepo.save(borrowCard);
                 }
+            }
+
+            BorrowCard borrowCard = borrowCardRepo.findById(borrowCardId).orElse(null);
+            if (borrowCard != null) {
+                borrowCard.setNote(note);
+                borrowCardRepo.save(borrowCard);
             }
 
             return true;

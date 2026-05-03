@@ -19,6 +19,7 @@ async function loadDetailCardForReturn(cardId) {
     userElement.innerText = "Người tạo: " + cardDetail.borrowCardDTO.userName + " (ID: " + cardDetail.borrowCardDTO.userId + ")";
     readerElement.innerText = "Độc giả: " + cardDetail.borrowCardDTO.readerName + " (ID: " + cardDetail.borrowCardDTO.readerId + ")";
     createdElement.innerText = "Ngày tạo: " + formateDate(cardDetail.borrowCardDTO.createdAt);
+    noteContent.innerText = cardDetail.note;
     totalAmountElement.innerText = formatTotal(cardDetail.totalAmount + "") + " đồng";
 
     let books = cardDetail.books;
@@ -186,7 +187,8 @@ async function confirmAllReturns() {
                     borrowCardId: item.borrowCardId,
                     bookId: item.bookId,
                     returnDate: formattedDate,
-                    fine: item.fine
+                    fine: item.fine,
+                    note: noteContent.value.trim()
                 })
             });
 
@@ -242,7 +244,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (goBackBtn) {
         goBackBtn.addEventListener("click", function () {
             resetCreateCard();
-            console.log("hello");
             cardDiv.style.display = "none";
             mainView.style.display = "flex";
             pendingReturns = {};
