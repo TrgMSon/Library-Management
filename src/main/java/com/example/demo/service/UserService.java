@@ -80,6 +80,9 @@ public class UserService {
         }
         String password = userDTO.getPassword();
         String role = userDTO.getRole();
+        if (!role.equals("admin") && !role.equals("user")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vai trò người dùng không hợp lệ!");
+        }
 
         User user = new User();
         user.setName(name);
