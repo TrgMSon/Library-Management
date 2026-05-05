@@ -443,8 +443,14 @@ acptCreateCard.addEventListener("click", async function () {
         return;
     }
 
-    let response = await fetch("/api/reader/checkReaderInfor?readerId=" + readerId).then(res => res.text());
-    if (response === "false" || !response.ok) {
+    let response = await fetch("/api/reader/checkReaderInfor?readerId=" + readerId);
+    if (!response.ok) {
+        waiting.classList.add("hide");
+        alert("Thông tin độc giả không tồn tại, vui lòng thêm độc giả");
+        return;
+    }
+    let res = await response.text();
+    if (res === "false") {
         waiting.classList.add("hide");
         alert("Thông tin độc giả không tồn tại, vui lòng thêm độc giả");
         return;
@@ -454,6 +460,16 @@ acptCreateCard.addEventListener("click", async function () {
     if (Number(qtyBorrowing) + rowBooks.length > 5) {
         waiting.classList.add("hide");
         alert("Độc giả đang mượn " + qtyBorrowing + " quyển sách, chỉ được mượn thêm " + (5 - Number(qtyBorrowing)) + " quyển sách");
+        return;
+    }
+
+    let checkRepeatList = new Set();
+    for (let i=0; i<rowBooks.length; i++) {
+        checkRepeatList.add((rowBooks[i].cells).innerText);
+    }
+    if (checkRepeatList.size != rowBooks.length) {
+        waiting.classList.add("hide");
+        alert("Mỗi đầu sách chỉ được mượn tối đa 1 quyển");
         return;
     }
 
