@@ -444,7 +444,7 @@ acptCreateCard.addEventListener("click", async function () {
     }
 
     let response = await fetch("/api/reader/checkReaderInfor?readerId=" + readerId).then(res => res.text());
-    if (response === "false") {
+    if (response === "false" || !response.ok) {
         waiting.classList.add("hide");
         alert("Thông tin độc giả không tồn tại, vui lòng thêm độc giả");
         return;
