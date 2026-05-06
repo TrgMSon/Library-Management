@@ -534,6 +534,7 @@ acptCreateCard.addEventListener("click", async function () {
             },
             body: JSON.stringify(borrowCardId)
         });
+        return;
     }
 
     resetCreateCard();
