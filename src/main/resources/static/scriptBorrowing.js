@@ -406,8 +406,10 @@ function checkRepeatBook() {
     let rowBooks = document.querySelectorAll(".rowBook");
     let checkRepeatList = new Set();
     for (let i=0; i<rowBooks.length; i++) {
-        checkRepeatList.add((rowBooks[i].cells).innerText);
+        checkRepeatList.add((rowBooks[i].cells)[0].innerText);
     }
+    console.log(checkRepeatList);
+    console.log(rowBooks.length);
     if (checkRepeatList.size != rowBooks.length) {
         waiting.classList.add("hide");
         alert("Mỗi đầu sách chỉ được mượn tối đa 1 quyển");
