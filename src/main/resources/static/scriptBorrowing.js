@@ -402,6 +402,21 @@ function markItem(bookIds) {
     });
 }
 
+function checkRepeatBook() {
+    let rowBooks = document.querySelectorAll(".rowBook");
+    let checkRepeatList = new Set();
+    for (let i=0; i<rowBooks.length; i++) {
+        checkRepeatList.add((rowBooks[i].cells).innerText);
+    }
+    if (checkRepeatList.size != rowBooks.length) {
+        waiting.classList.add("hide");
+        alert("Mỗi đầu sách chỉ được mượn tối đa 1 quyển");
+        return false;
+    }
+
+    return true;
+}
+
 acptCreateCard.addEventListener("click", async function () {
     waiting.classList.remove("hide");
 
@@ -456,20 +471,12 @@ acptCreateCard.addEventListener("click", async function () {
         return;
     }
 
+    if (!checkRepeatBook()) return;
+
     let qtyBorrowing = await fetch("/api/reader/checkBorrowingBook?readerId=" + readerId).then(res => res.text());
     if (Number(qtyBorrowing) + rowBooks.length > 5) {
         waiting.classList.add("hide");
         alert("Độc giả đang mượn " + qtyBorrowing + " quyển sách, chỉ được mượn thêm " + (5 - Number(qtyBorrowing)) + " quyển sách");
-        return;
-    }
-
-    let checkRepeatList = new Set();
-    for (let i=0; i<rowBooks.length; i++) {
-        checkRepeatList.add((rowBooks[i].cells).innerText);
-    }
-    if (checkRepeatList.size != rowBooks.length) {
-        waiting.classList.add("hide");
-        alert("Mỗi đầu sách chỉ được mượn tối đa 1 quyển");
         return;
     }
 
@@ -507,7 +514,6 @@ acptCreateCard.addEventListener("click", async function () {
     }).then(res => res.json());
 
     if (response.length > 0) {
-        console.log(response);
         if (response.includes("invalidBook")) {
             markItem(response);
             waiting.classList.add("hide");
